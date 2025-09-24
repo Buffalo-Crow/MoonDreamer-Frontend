@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL;
+const API_BASE = import.meta.env.VITE_API_URL || "https://localhost:3001";;
 
 export async function getCoordinates(location) {
   const response = await fetch(`${API_BASE}/api/moon/geocode?location=${encodeURIComponent(location)}`);
