@@ -1,0 +1,128 @@
+.dream-detail-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-height: calc(100vh - 80px);
+  width: 100%;
+  background-color: black;
+  overflow: hidden;
+  margin-left: 24px;
+  border-radius: 10px;
+  margin-top: 36px;
+  padding: 15px;
+  min-height: 0;
+}
+
+.dream-detail__column {
+  padding: 20px;
+  flex-shrink: 0;
+}
+
+.dream-detail__scrollable-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  min-height: 0;
+}
+
+.dream-detail__image {
+  width: 145px;
+  height: 145px;
+  animation: pulse 4s infinite;
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  margin: 20px;
+}
+
+.dream-detail__column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-left: 10px;
+  width: 225px;
+}
+.dream-detail__container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dream-detail__delete-btn {
+  background-image: url(../../assets/Trash.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 39px;
+  width: 10px;
+  padding: 20px;
+  background-color: transparent;
+}
+
+.dream-detail__edit-btn {
+  background-image: url(../../assets//Edit.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 39px;
+  width: 10px;
+  padding: 20px;
+  background-color: transparent;
+}
+
+.dream-detail__back-btn {
+  background: transparent;
+  height: 35px;
+}
+
+.dream-detail__btn-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #444;
+  margin-top: auto;
+  z-index: 10;
+}
+
+
+@media screen and (max-width: 885px) {
+  .dream-detail-card {
+    /* width: auto; */
+    margin-left: 0;
+    border-radius: 10px;
+  }
+}
+
+@media screen and (max-width: 820px) {
+  .dream-detail__container {
+    padding: 0;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .dream-detail-card {
+    flex: 1;
+    background-color: black;
+    color: white;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 12px;
+    overflow-y: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .dream-detail__column {
+    padding-left: 2px;
+    padding-bottom: 0;
+  }
+
+  .dream-detail__scrollable-content {
+    padding: 20px 0;
+  }
+
+  .dream-detail__image {
+    width: 80px;
+    height: 80px;
+    margin-left: 0;
+  }
+}

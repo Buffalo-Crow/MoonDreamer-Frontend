@@ -1,0 +1,27 @@
+.menu-overlay {
+  position: absolute;
+  top: 650px;
+  right: 154px;
+  background-color: #f19edc;
+  border-radius: 10px;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.menu-panel button {
+  height: 35px;
+  display: block;
+  background: transparent;
+  color: black;
+  border: none;
+  margin: 10px 0;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .menu-overlay {
+    top: -222px;
+    right: 4px;
+  }
+}

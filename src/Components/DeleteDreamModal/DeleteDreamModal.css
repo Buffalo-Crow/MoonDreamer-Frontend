@@ -1,0 +1,61 @@
+.modal__delete-container {
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  border-radius: 10px;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  background-color: #f19edc;
+  position: relative;
+}
+
+.modal__delete-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+.modal__delete-caption-one {
+  margin-bottom: 0;
+  font-size: 24px;
+}
+
+.modal__delete-caption-two {
+  margin-top: 0;
+}
+.modal__button-caption_cancel {
+  background-color: black;
+  height: 35px;
+  margin-left: 30px;
+}
+
+.modal__button-caption_delete {
+  background-color: black;
+}
+.modal__delete_close-btn {
+  position: absolute;
+  top: -50px;
+  left: 439px;
+}
+
+@media screen and (max-width: 555px) {
+  .modal__delete-container {
+    width: 300px;
+  }
+  .modal__delete_close-btn {
+    left: 292px;
+  }
+  .modal__delete-caption-one {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 367px) {
+  .modal__delete-container {
+    width: 250px;
+  }
+
+  .modal__delete_close-btn {
+    left: 243px;
+  }
+}

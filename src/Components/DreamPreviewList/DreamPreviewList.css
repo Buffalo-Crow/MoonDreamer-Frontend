@@ -1,0 +1,81 @@
+.dream-preview-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  list-style-type: none;
+  margin-top: 36px;
+}
+
+.dream-preview {
+  background-color: black;
+  border-radius: 10px;
+  max-width: 1050px;
+}
+
+.dream-preview__container {
+  display: flex;
+  max-height: 100px;
+  height: 100px;
+}
+
+.dream-preview__description {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  margin-left: 20px;
+  max-width: 853px;
+}
+
+.dream-preview__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+.dream-preview__date {
+  white-space: nowrap;
+  display: flex;
+  align-items: flex-end;
+  margin-left: auto;
+  padding-bottom: 10px;
+  padding: 10px;
+}
+
+.dream-preview__moon-icon {
+  height: 30px;
+  width: 30px;
+}
+
+@media screen and (max-width: 885px) {
+  .dream-preview-list {
+    margin-left: 0;
+    padding: 0 10px;
+    overflow: scroll;
+    margin-top: -8px;
+    margin-bottom: 0;
+  }
+
+  .dream-preview__container {
+    height: 80px;
+  }
+
+  .dream-preview__description {
+    font-size: 17px;
+  }
+}
+
+@media screen and (max-width: 581px) {
+  .dream-preview__description {
+    font-size: 15px;
+  }
+
+  .dream-preview__moon-icon {
+    height: 24px;
+    width: 24px;
+  }
+  .dream-preview__date {
+    font-size: 12px;
+  }
+}

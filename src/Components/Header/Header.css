@@ -1,0 +1,46 @@
+.header {
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.header__title {
+  margin-bottom: 8px;
+  text-align: center;
+  padding: 20px;
+  font-size: 100px;
+}
+
+.header__logo {
+  width: 62px;
+  transform-origin: 23px center;
+  animation: swingAndRotate 3.3s linear infinite;
+}
+
+@keyframes swingAndRotate {
+  0% {
+    transform: rotate(0deg) rotateZ(3deg);
+  } 
+  25% {
+    transform: rotate(90deg) rotateZ(1deg);
+  } 
+  50% {
+    transform: rotate(180deg) rotateZ(3deg);
+  } 
+}
+
+@media screen and (max-width: 540px) {
+  .header__title {
+    font-size: 41px;
+    margin-top: 0;
+  }
+}
+
+@media screen and (max-width: 344px) {
+  .header__title {
+    font-size: 32px;
+    margin-top: 0;
+  }
+}

@@ -1,0 +1,14 @@
+.page {
+ background-color: rgba(21, 24, 67, 0.6);
+  background-image: url(./src/assets/stardust.png);
+  background-repeat: repeat;
+  background-size: cover;
+  background-attachment: fixed;
+ 
+}
+
+.body {
+  margin: 0;
+}
+
+
