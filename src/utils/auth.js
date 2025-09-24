@@ -1,8 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || "https://localhost:3001";
 import { checkResponse } from "./api";
 
 export const signin = (email, password) => {
-  console.log("API URL:", apiUrl)
+  console.log("API URL:", API_URL)
   return fetch(`${API_URL}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
