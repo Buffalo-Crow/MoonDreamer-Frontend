@@ -1,0 +1,38 @@
+.ai-insights{
+  display: flex;
+  flex-direction:column ;
+  margin-top: 25px;
+}
+
+.ai-insight-text, .ai-insights-container {
+  display: block;
+  margin-top: 1rem;
+  color: black;
+  background-color: #f0f4ff;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.ai-insights-button {
+  height: 30px;
+  padding: 0.5rem 1rem;
+  background-color: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  width: 250px;
+}
+
+.ai-insights-button:hover {
+  background-color: #574fd6;
+}
+
+.ai-insights-content {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #333;
+  white-space: pre-wrap; /* preserves line breaks */
+}

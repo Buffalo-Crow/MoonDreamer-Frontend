@@ -1,0 +1,46 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.main__buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  height: 35px;
+}
+
+.main__login-btn {
+  color: black;
+  background-color: #f19edc;
+}
+
+.main__register-btn {
+  color: black;
+  background-color: #f19edc;
+}
+.main__description {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 30px;
+  font-size: 20px;
+}
+
+.main__title {
+  text-align: center;
+  margin-bottom: 0;
+  font-size: 30px;
+}
+
+@media screen and (max-width: 375px) {
+  .main__title {
+    font-size: 20px;
+  }
+
+  .main__description {
+    font-size: 15px;
+  }
+}
