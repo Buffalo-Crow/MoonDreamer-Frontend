@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import { getMoonSignFromLocationAndDate } from "../../utils/getMoonSignFromLocationAndDate";
 import { formatDateForInput } from "../../utils/dateHelper";
+import { MultiSelectDropdown } from "../MultiSelectDropDown/MultiSelectDropDown";
 
 function DreamModal({
   isOpen,
@@ -23,80 +24,111 @@ function DreamModal({
 
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-  if (!isOpen) return;
+  // Define available categories
+  const categoryOptions = [
+    'Nightmare',
+    'Lucid Dream',
+    'Travel Dream',
+    'Subconscious Fquery',
+    'Message From Spirit',
+    'Prophetic Dream',
+    'Memory',
+    'Outside Interference',
+    'Someone Elses Dream',
 
-  if (dreamToEdit) {
-    setFormData({
-      date: formatDateForInput( dreamToEdit.date || ""),
-      summary: dreamToEdit.summary || "",
-      categories: dreamToEdit.categories || "",
-      tags: dreamToEdit.tags || "",
-      location: dreamToEdit.location || "",
-      moonSign: dreamToEdit.moonSign || "",
-    });
-  } else {
-    setFormData({
-      date: "",
-      summary: "",
-      categories: "",
-      tags: "",
-      location: "",
-      moonSign: "",
-    });
-  }
-}, [isOpen, dreamToEdit]);
+  ];
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (dreamToEdit) {
+      console.log("Setting form data from dreamToEdit:", dreamToEdit);
+      setFormData({
+        date: formatDateForInput(dreamToEdit.date || ""),
+        summary: dreamToEdit.summary || "",
+        categories: dreamToEdit.categories || "",
+        tags: dreamToEdit.tags || "",
+        location: dreamToEdit.location || "",
+        moonSign: dreamToEdit.moonSign || "",
+      });
+    } else {
+      setFormData({
+        date: "",
+        summary: "",
+        categories: "",
+        tags: "",
+        location: "",
+        moonSign: "",
+      });
+    }
+  }, [isOpen, dreamToEdit]);
 
   function handleDreamChange(e) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
- async function handleSubmit(e) {
-  e.preventDefault();
-  setIsLoading(true);
+  // Handle category selection for multi-select dropdown
+  const handleCategoryChange = (selectedCategories) => {
+    // Convert array back to string format to maintain compatibility with existing code
+    const categoriesString = selectedCategories.join(', ');
+    setFormData((prev) => ({ ...prev, categories: categoriesString }));
+  };
 
-  try {
-    let moonSign = formData.moonSign;
+  // Convert string categories to array for the dropdown
+  const getSelectedCategories = () => {
+    if (!formData.categories) return [];
+    if (Array.isArray(formData.categories)) return formData.categories;
+    return formData.categories.split(',').map(cat => cat.trim()).filter(cat => cat);
+  };
 
-    if (
-      !isEditMode ||
-      dreamToEdit.date !== formData.date ||
-      dreamToEdit.location !== formData.location
-    ) {
-      moonSign = await getMoonSignFromLocationAndDate(
-        formData.location,
-        formData.date
-      );
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      let moonSign = formData.moonSign;
+
+      if (
+        !isEditMode ||
+        dreamToEdit.date !== formData.date ||
+        dreamToEdit.location !== formData.location
+      ) {
+        moonSign = await getMoonSignFromLocationAndDate(
+          formData.location,
+          formData.date
+        );
+      }
+
+      const dreamData = {
+        ...formData,
+        moonSign,
+        // Include the dream ID when editing
+        ...(isEditMode && dreamToEdit && { 
+          _id: dreamToEdit._id || dreamToEdit.id 
+        })
+      };
+
+      console.log(isEditMode ? "Editing dream:" : "Adding dream:", dreamData);
+
+      onSubmitDream(dreamData);
+      closeActiveModal();
+
+      setFormData({
+        date: "",
+        summary: "",
+        categories: "",
+        tags: "",
+        location: "",
+        moonSign: "",
+      });
+    } catch (error) {
+      console.error("Failed to fetch moon sign:", error);
+      alert("Failed to submit dream. Please check the location and try again.");
+    } finally {
+      setIsLoading(false);
     }
-
-    const dreamData = {
-      ...formData,
-      moonSign,
-    };
-
-    console.log(isEditMode ? "Editing dream:" : "Adding dream:", dreamData);
-
-    
-    onSubmitDream(dreamData);
-    closeActiveModal();
-
-  
-    setFormData({
-      date: "",
-      summary: "",
-      categories: "",
-      tags: "",
-      location: "",
-      moonSign: "",
-    });
-  } catch (error) {
-    console.error("Failed to fetch moon sign:", error);
-    alert("Failed to submit dream. Please check the location and try again.");
-  } finally {
-    setIsLoading(false);
   }
-}
 
   return (
     <ModalWithForm
@@ -137,14 +169,12 @@ function DreamModal({
       </label>
       <label className="modal__label">
         Categories
-        <input
+        <MultiSelectDropdown
+          options={categoryOptions}
+          selectedValues={getSelectedCategories()}
+          onChange={handleCategoryChange}
+          placeholder="Select dream categories..."
           className="modal__input"
-          type="text"
-          name="categories"
-          placeholder="Add any categories of your dream"
-          onChange={handleDreamChange}
-          value={formData.categories}
-          required
         />
       </label>
       <label className="modal__label">

@@ -113,8 +113,12 @@ useEffect(() => {
 
   async function handleEditDream(updatedDreamData) {
   try {
-    const updatedDream = await updateDream(updatedDreamData._id, updatedDreamData);
-    editDream(updatedDream);
+    // Call the API directly first
+    const updatedDream = await editDreams(updatedDreamData._id, updatedDreamData);
+    
+    // Then update the context state
+    updateDream(updatedDream); // Pass the returned dream object
+    
     closeModal(activeModal);
     setDreamBeingEdited(null);
   } catch (err) {

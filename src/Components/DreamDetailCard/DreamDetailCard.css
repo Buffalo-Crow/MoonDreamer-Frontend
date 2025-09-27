@@ -48,7 +48,7 @@
 }
 
 .dream-detail__delete-btn {
-  background-image: url(../../assets/Trash.svg);
+  background-image: url(../../assets/TrashNew.svg);
   background-repeat: no-repeat;
   background-position: center;
   height: 39px;
@@ -58,7 +58,7 @@
 }
 
 .dream-detail__edit-btn {
-  background-image: url(../../assets//Edit.svg);
+  background-image: url(../../assets//EditNew.svg);
   background-repeat: no-repeat;
   background-position: center;
   height: 39px;
