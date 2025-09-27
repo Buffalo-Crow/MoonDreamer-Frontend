@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "https://localhost:3001";;
+const API_BASE = import.meta.env.VITE_API_URL || "https://localhost:3001";;
 
 export async function fetchDreamMoonSign({ date, lat, lng }) {
   const response = await fetch(`${API_BASE}/api/moon/moon-sign/dream`, {
