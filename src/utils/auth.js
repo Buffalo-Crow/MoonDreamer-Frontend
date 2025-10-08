@@ -1,4 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL || "https://localhost:3001";
+const API_URL = import.meta.env.VITE_API_URL || "https://moondreamer-backend-production.up.railway.app";
+
 import { checkResponse } from "./api";
 
 export const signin = (email, password) => {
