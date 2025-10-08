@@ -1,6 +1,8 @@
 import { apiFetch } from "./apiFetch";
 
-const BASE_URL = "/api/insights";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001";
+const BASE_URL = `${API_BASE}/api/insights`;
+
 
 export const fetchAIInsight = async (scope, dreamId = null) => {
   let url = "";
@@ -16,9 +18,10 @@ export const fetchAIInsight = async (scope, dreamId = null) => {
     throw new Error(`Invalid scope: ${scope}`);
   }
 
-  const body = JSON.stringify({}); // can add extra payload if needed
+  const body = JSON.stringify({});
   const data = await apiFetch(url, { method: "POST", body });
-  
+
   if (!data.aiResult) throw new Error("No aiResult returned from backend");
   return data.aiResult;
 };
+
