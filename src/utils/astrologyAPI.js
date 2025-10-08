@@ -19,11 +19,11 @@ export async function fetchDreamMoonSign({ date, lat, lng }) {
   return data.moonSign;
 }
 
-// Optional: fetch current moon sign (default location)
-export async function fetchCurrentMoonSign() {
-   console.log("🔍 Calling:", `${API_BASE}/api/moon/moon-sign`); 
-  const response = await fetch(`${API_BASE}/api/moon/moon-sign`);
-  if (!response.ok) throw new Error("Failed to fetch current moon sign.");
-  const data = await response.json();
-  return data.moonSign;
-}
+// // Optional: fetch current moon sign (default location)
+// export async function fetchCurrentMoonSign() {
+//    console.log("🔍 Calling:", `${API_BASE}/api/moon/moon-sign`); 
+//   const response = await fetch(`${API_BASE}/api/moon/moon-sign`);
+//   if (!response.ok) throw new Error("Failed to fetch current moon sign.");
+//   const data = await response.json();
+//   return data.moonSign;
+// }

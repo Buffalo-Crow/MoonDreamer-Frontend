@@ -13,7 +13,7 @@ export function MoonProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true; 
+    let isMounted = true;
 
     async function fetchMoonSign() {
       setLoading(true);
@@ -27,7 +27,11 @@ export function MoonProvider({ children }) {
         return;
       }
       try {
-        const res = await fetch("/api/moon/moon-sign");
+        const url =
+          window.location.hostname === "localhost"
+            ? `${import.meta.env.VITE_API_URL}/api/moon/moon-sign`
+            : "https://moondreamer-backend-production.up.railway.app/api/moon/moon-sign";
+        const res = await fetch(url);
         const data = await res.json();
 
         if (!data?.moonSign) throw new Error("Moon sign missing from API");
