@@ -14,11 +14,13 @@
 }
 
 .main__login-btn {
+  font-size: 18px;
   color: black;
   background-color: #f19edc;
 }
 
 .main__register-btn {
+  font-size: 18px;
   color: black;
   background-color: #f19edc;
 }
