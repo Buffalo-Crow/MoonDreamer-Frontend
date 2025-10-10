@@ -56,7 +56,7 @@
   .zodiac-sidebar__sign_list {
     grid-template-columns: repeat(3, 1fr);
     margin-top: 0;
-    gap: 10px;
+    gap: 0px;
     margin-bottom: 0;
   }
 
@@ -80,13 +80,19 @@
     width: 44px;
     height: 36px;
   }
-
+.zodiac-sidebar__sign_list{
+  grid-template-columns: repeat(4, 1fr);
+}
   .zodiac-sidebar {
     padding: 0;
     padding-bottom: 10px;
-    height: 319px;
+    height: 244px;
+   justify-content: center;
   }
 
+  .zodiac-sidebar__sign-button {
+  font-size: 12px;
+  }
   .zodiac-sidebar__all-button-container {
     margin-bottom: 0;
   }
