@@ -19,7 +19,7 @@
 }
 .modal-with-form__container {
   background-color: black;
-  width: 340px;
+  width: 356px;
   padding: 13px;
   border-radius: 10px;
   position: relative;
@@ -154,7 +154,7 @@
 
 @media screen and (max-width: 390px) {
   .modal-with-form__container {
-    width: 275px;
+    width: 319px;
   }
 
   .modal__label {

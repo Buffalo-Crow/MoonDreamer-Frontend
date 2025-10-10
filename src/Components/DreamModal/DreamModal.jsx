@@ -186,7 +186,6 @@ function DreamModal({
           placeholder="Add any tags for your dream"
           onChange={handleDreamChange}
           value={formData.tags}
-          required
         />
       </label>
       <label className="modal__label">
