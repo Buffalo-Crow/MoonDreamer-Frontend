@@ -34,7 +34,7 @@
 }
 
 .modal__label {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 20px;
   font-weight: 700;
   padding: 10px;
@@ -75,6 +75,10 @@
   margin-top: 10px;
   width: 100%;
   height: 35px;
+}
+
+.modal__submit:hover{
+  color:#5e3955;
 }
 
 .modal__close {
@@ -154,7 +158,7 @@
   }
 
   .modal__label {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 18px;
     padding: 7px;
   }
