@@ -11,11 +11,12 @@
   justify-content: space-evenly;
   list-style-type: none;
   padding: 0;
+  margin-bottom: 0;
 }
 
 .navbar {
   flex-shrink: 0;
-  padding: 20px;
+  /* padding: 20px; */
   background-color: transparent;
   z-index: 5;
 }

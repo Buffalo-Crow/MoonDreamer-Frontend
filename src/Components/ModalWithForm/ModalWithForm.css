@@ -19,7 +19,7 @@
 }
 .modal-with-form__container {
   background-color: black;
-  width: 340px;
+  width: 356px;
   padding: 13px;
   border-radius: 10px;
   position: relative;
@@ -34,7 +34,7 @@
 }
 
 .modal__label {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 20px;
   font-weight: 700;
   padding: 10px;
@@ -75,6 +75,10 @@
   margin-top: 10px;
   width: 100%;
   height: 35px;
+}
+
+.modal__submit:hover{
+  color:#5e3955;
 }
 
 .modal__close {
@@ -150,11 +154,11 @@
 
 @media screen and (max-width: 390px) {
   .modal-with-form__container {
-    width: 275px;
+    width: 319px;
   }
 
   .modal__label {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 18px;
     padding: 7px;
   }

@@ -25,7 +25,7 @@ function AIInsights({ dreamId }) {
    
     <div className="ai-insights">
       <button className="ai-insights-button"onClick={handleGenerate} disabled={loading}>
-        {loading ? "Generating..." : "Generate AI Insight"}
+        {loading ? "Generating..." : "Generate Insight"}
       </button>
 
       {error && <p className="error">{error}</p>}
