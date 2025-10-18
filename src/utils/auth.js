@@ -3,7 +3,6 @@ const API_URL = import.meta.env.VITE_API_URL || "https://moondreamer-backend-pro
 import { checkResponse } from "./api";
 
 export const signin = (email, password) => {
-  console.log("API URL:", API_URL)
   return fetch(`${API_URL}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -11,14 +10,13 @@ export const signin = (email, password) => {
   })
     .then((res) => checkResponse(res))
     .then((data) => {
-      // Save token immediately
       localStorage.setItem("jwtToken", data.token);
+      localStorage.setItem("currentUser", JSON.stringify(data.user));
       return data;
     });
 };
 
 export const register = ({ username, email, password, avatar }) => {
-  console.log("Register payload:", { username, email, password, avatar });
   return fetch(`${API_URL}/api/auth/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
