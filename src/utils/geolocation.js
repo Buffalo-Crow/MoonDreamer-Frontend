@@ -1,5 +1,4 @@
 const API_BASE = "https://moondreamer-backend-production.up.railway.app";
-console.log("🔍 Using API_BASE:", API_BASE);
 
 export async function getCoordinates(location) {
   const response = await fetch(`${API_BASE}/api/moon/geocode?location=${encodeURIComponent(location)}`);
