@@ -7,6 +7,12 @@ import { UserProvider } from "./contexts/userContext";
 import { ModalProvider } from "./contexts/modalContext";
 import { DreamProvider } from "./contexts/dreamContext";
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js')
+    .then(registration => console.log('SW registered:', registration))
+    .catch(error => console.log('SW registration failed:', error));
+}
+
 createRoot(document.getElementById("root")).render(
  <StrictMode> 
   <BrowserRouter>
