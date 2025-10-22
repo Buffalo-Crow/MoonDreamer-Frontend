@@ -1,6 +1,6 @@
 const API_BASE = import.meta.env.VITE_API_URL || "https://moondreamer-backend-production.up.railway.app";
 
-console.log("🔍 Using API_BASE:", API_BASE);
+
 
 export async function fetchDreamMoonSign({ date, lat, lng }) {
   const response = await fetch(`${API_BASE}/api/moon/moon-sign/dream`, {
