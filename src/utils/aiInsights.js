@@ -25,3 +25,37 @@ export const fetchAIInsight = async (scope, dreamId = null) => {
   return data.aiResult;
 };
 
+export const saveAIInsight = async (dreamId, summary) => {
+  if (!dreamId) throw new Error("dreamId is required to save insight");
+  
+  const url = `${BASE_URL}/save`;
+  const body = JSON.stringify({
+    dreamIds: [dreamId],
+    summary,
+    scope: "single"
+  });
+
+  const data = await apiFetch(url, { 
+    method: "POST", 
+    body 
+  });
+
+  return data.insight;
+};
+
+export const fetchSavedInsights = async (dreamId) => {
+  if (!dreamId) throw new Error("dreamId is required to fetch insights");
+  
+  const url = `${BASE_URL}/dream/${dreamId}`;
+  const data = await apiFetch(url);
+  
+  return data.insights || [];
+};
+
+export const deleteInsight = async (insightId) => {
+  if (!insightId) throw new Error("insightId is required to delete an insight");
+  const url = `${BASE_URL}/${insightId}`;
+  const data = await apiFetch(url, { method: "DELETE" });
+  return data;
+};
+

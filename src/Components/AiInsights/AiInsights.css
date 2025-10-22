@@ -36,3 +36,71 @@
   color: #333;
   white-space: pre-wrap; /* preserves line breaks */
 }
+
+.save-insight-button {
+  height: 30px;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #574fd6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 150px;
+  align-self: center;
+}
+
+.save-insight-button:hover {
+  background-color: #45a049;
+}
+
+.saved-insights {
+  margin-top: 1.5rem;
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+}
+
+.saved-insight {
+  border-radius: 5px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e9ecef;
+}
+
+.saved-insight p {
+  white-space: pre-wrap; /* preserve paragraphs and line breaks */
+  margin: 0;
+}
+
+.insight-date {
+  display: block;
+  color: #6c757d;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.saved-insight-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.insight-delete-btn {
+  background-image: url(../../assets/TrashNew.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 28px;
+  width: 28px;
+  padding: 6px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.insight-delete-btn:hover {
+  opacity: 0.8;
+}
+
+.ai-result p {
+  white-space: pre-wrap; /* preserve paragraphs in generated insight */
+}

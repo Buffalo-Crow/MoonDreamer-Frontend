@@ -11,22 +11,27 @@
   position: relative;
 }
 
-.modal__delete-buttons {
-  display: flex;
-  justify-content: space-between;
-}
 .modal__delete-caption-one {
-  margin-bottom: 0;
+  margin: 0 0 8px 0;
   font-size: 24px;
+  text-align: center;
 }
 
 .modal__delete-caption-two {
-  margin-top: 0;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.modal__delete-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
 }
 .modal__button-caption_cancel {
   background-color: black;
   height: 35px;
-  margin-left: 30px;
+  padding: 0 18px;
 }
 
 .modal__button-caption_delete {

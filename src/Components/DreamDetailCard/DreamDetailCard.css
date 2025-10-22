@@ -47,6 +47,11 @@
   flex-direction: column;
 }
 
+.dream-detail__summary {
+  white-space: pre-wrap; /* preserve line breaks and paragraphs */
+  margin-bottom: 0.75rem;
+}
+
 .dream-detail__delete-btn {
   background-image: url(../../assets/TrashNew.svg);
   background-repeat: no-repeat;
