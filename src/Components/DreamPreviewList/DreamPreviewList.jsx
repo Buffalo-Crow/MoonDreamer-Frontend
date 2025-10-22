@@ -15,7 +15,6 @@ function DreamPreviewList({ onSelectDream }) {
             dream.moonSign.toLowerCase().trim() ===
               filterSign.toLowerCase().trim()
         );
-  console.log("Dreams in Preview List", displayedDreams);
   return (
     <>
       <ul className="dream-preview-list">
