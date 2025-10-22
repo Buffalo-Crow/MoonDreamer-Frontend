@@ -38,12 +38,23 @@ self.addEventListener('fetch', event => {
   
   // Cache-first strategy for everything else
   event.respondWith(
-    caches.match(request).then(response => 
-      response || fetch(request).then(res => {
-        const cache = caches.open(CACHE_NAME);
-        cache.then(c => c.put(request, res.clone()));
+    caches.match(request).then(response => {
+      if (response) {
+        return response;
+      }
+      
+      return fetch(request).then(res => {
+        if (!res || res.status !== 200 || res.type === 'error') {
+          return res;
+        }
+        
+        const resClone = res.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(request, resClone);
+        });
+        
         return res;
-      })
-    ).catch(() => caches.match('/index.html'))
+      });
+    }).catch(() => caches.match('/index.html'))
   );
 });
