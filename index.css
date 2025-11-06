@@ -21,6 +21,17 @@
   height: 100%;
 }
 
+/* Prevent horizontal scroll globally */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
