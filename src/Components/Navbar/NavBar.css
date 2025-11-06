@@ -26,7 +26,7 @@
   width: 100%;
   backdrop-filter: blur(9px);
   -webkit-backdrop-filter: blur(9px);
-  padding: 10px 0;
+  padding: 20px 0;
 }
 .navbar__add-dream {
   background-size: 35px;
@@ -63,6 +63,6 @@
 
 @media screen and (max-width: 768px) {
   .navbar {
-    padding: 5px 0;
+    padding: 15px 0;
   }
 }
