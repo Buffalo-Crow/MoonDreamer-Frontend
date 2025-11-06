@@ -1,12 +1,15 @@
 .home-main {
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 1rem;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-   flex-grow: 1;
-   justify-content: center;
+  flex-grow: 1;
+  height: calc(100vh - 120px); /* Account for navbar height */
+  overflow: hidden; /* Parent container doesn't scroll */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .home-main__image {

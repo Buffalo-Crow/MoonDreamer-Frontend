@@ -23,6 +23,11 @@ function NavBar({
           </Link>
         </li>
         <li className="navbar__list-item">
+          <Link to="/home">
+            <button className="navbar__home"></button>
+          </Link>
+        </li>
+        <li className="navbar__list-item">
           <button
             onClick={handleDreamClick}
             className="navbar__add-dream"

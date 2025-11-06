@@ -1,4 +1,6 @@
 .profile-header {
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(5px);
   display: flex;
   flex-direction: row;
   justify-content: space-between;

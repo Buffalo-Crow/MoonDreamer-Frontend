@@ -1,0 +1,43 @@
+.toggle-button {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  padding: 4px;
+  margin: 10px auto;
+  width: fit-content;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.toggle-button__option {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+.toggle-button__option:hover {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.toggle-button__option.active {
+  background-color: #6c63ff;
+  color: white;
+  box-shadow: 0 2px 8px rgba(108, 99, 255, 0.3);
+}
+
+@media screen and (max-width: 480px) {
+  .toggle-button__option {
+    padding: 8px 16px;
+    font-size: 12px;
+    min-width: 100px;
+  }
+}
