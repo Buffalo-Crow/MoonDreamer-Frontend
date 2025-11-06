@@ -1,0 +1,22 @@
+.moon-sign-display {
+  flex-shrink: 0; /* Don't shrink */
+  flex-grow: 1;   /* Grow to fill available space */
+  margin-bottom: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 200px); /* Take most of available height */
+  overflow-y: auto;
+}
+
+.moon-sign-display h2 {
+  margin: 20px 0 10px;
+}
+
+.moon-sign-display .home-main__description {
+  margin: 0;
+  max-width: 600px;
+  line-height: 1.6;
+}

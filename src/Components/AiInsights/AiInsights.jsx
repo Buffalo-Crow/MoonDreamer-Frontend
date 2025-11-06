@@ -10,8 +10,8 @@ function AIInsights({ dreamId }) {
   const [savedInsights, setSavedInsights] = useState([]);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [insightToDelete, setInsightToDelete] = useState(null);
+  
   const handleGenerate = async () => {
-
   setLoading(true);
   setError(null);
   try {
@@ -46,7 +46,6 @@ function AIInsights({ dreamId }) {
 
       {error && <p className="error">{error}</p>}
 
-      {/* Show saved insights first */}
       {savedInsights.length > 0 && (
         <div className="saved-insights">
           <h4>Saved Insights</h4>
@@ -71,7 +70,6 @@ function AIInsights({ dreamId }) {
         </div>
       )}
 
-      {/* Show current generated insight */}
       {aiResult && (
         <div className="ai-result">
           <h4>New AI Insight</h4>
@@ -82,10 +80,9 @@ function AIInsights({ dreamId }) {
               try {
                 const savedInsight = await saveAIInsight(dreamId, aiResult);
                 setSavedInsights(prev => [...prev, savedInsight]);
-                setAiResult(""); // Clear the generated insight after saving
+                setAiResult(""); 
               } catch (err) {
                 console.error("Failed to save insight:", err);
-                alert("Failed to save insight. Please try again.");
               }
             }}
           >

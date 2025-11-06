@@ -110,7 +110,8 @@
     margin: 10px;
     border-radius: 12px;
     overflow-y: auto;
-    height: 100%;
+    height: calc(100vh - 160px); /* Fixed height accounting for navbar */
+    max-height: calc(100vh - 160px);
     display: flex;
     flex-direction: column;
     gap: 1rem;

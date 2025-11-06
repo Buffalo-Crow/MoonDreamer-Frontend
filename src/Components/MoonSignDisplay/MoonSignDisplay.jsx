@@ -1,4 +1,5 @@
 import { useMoon } from "../../contexts/moonSignContext"
+import "./MoonSignDisplay.css"
 
 export default function MoonSignDisplay() {
   const { moonSign, moonImage, moonDescription, error, loading } = useMoon();
@@ -8,7 +9,7 @@ export default function MoonSignDisplay() {
   if (!moonSign) return <p>No moon sign available.</p>;
 
   return (
-    <div>
+    <div className="moon-sign-display">
       {moonImage && (
         <img
           className="home-main__image"
