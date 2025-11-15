@@ -234,9 +234,11 @@
   border-radius: 20px;
   padding: 8px 16px;
   color: white;
-  font-size: 14px;
+  font-size: 16px; /* Prevent mobile zoom on focus */
   outline: none;
   transition: all 0.3s ease;
+  -webkit-appearance: none; /* Remove iOS styling */
+  appearance: none;
 }
 
 .social-feed__comment-input-field:focus {
@@ -254,10 +256,13 @@
   border: none;
   border-radius: 20px;
   padding: 8px 20px;
-  font-size: 14px;
+  font-size: 16px; /* Match input font size */
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  flex-shrink: 0; /* Prevent button from shrinking */
+  -webkit-appearance: none; /* Remove iOS styling */
+  appearance: none;
 }
 
 .social-feed__comment-submit:hover:not(:disabled) {
