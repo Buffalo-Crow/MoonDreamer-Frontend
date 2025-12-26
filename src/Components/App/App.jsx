@@ -41,36 +41,41 @@ function App() {
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const { activeModal, openModal, closeModal } = useModal();
   const [dreamBeingEdited, setDreamBeingEdited] = useState(null);
+  const [isVerifyingToken, setIsVerifyingToken] = useState(false);
   const navigate = useNavigate();
 
-useEffect(() => {
-  const storedUser = localStorage.getItem("currentUser");
-  const token = localStorage.getItem("jwtToken");
-  if (!token || !storedUser) return;
+  // Verify token on mount if user exists
+  useEffect(() => {
+    if (!currentUser) return;
 
-  try {
-    const parsedUser = JSON.parse(storedUser);
-    setCurrentUser({ ...parsedUser, token });
-  } catch {
-    localStorage.removeItem("currentUser");
-    localStorage.removeItem("jwtToken");
-    setCurrentUser(null);
-    return;
-  }
+    const token = localStorage.getItem("jwtToken");
+    if (!token) {
+      setCurrentUser(null);
+      return;
+    }
 
-  // Optional: verify token with backend
-  getUserInfo()
-    .then((user) => setCurrentUser({ ...user, token }))
-    .catch((err) => {
-      if (err.message.includes("401")) { // only clear if unauthorized
-        localStorage.removeItem("currentUser");
-        localStorage.removeItem("jwtToken");
-        setCurrentUser(null);
-      } else {
-        console.warn("Token verification failed, keeping local data", err);
-      }
-    });
-}, [setCurrentUser]);
+    // Only verify once on mount
+    if (isVerifyingToken) return;
+    setIsVerifyingToken(true);
+
+    getUserInfo()
+      .then((user) => {
+        setCurrentUser({ ...user, token });
+      })
+      .catch((err) => {
+        console.error("Token verification failed:", err);
+        // Only clear auth if token is actually invalid (401/403)
+        if (err.message.includes("401") || err.message.includes("403")) {
+          localStorage.removeItem("currentUser");
+          localStorage.removeItem("jwtToken");
+          setCurrentUser(null);
+        }
+        // Otherwise keep the user logged in (network error, etc.)
+      })
+      .finally(() => {
+        setIsVerifyingToken(false);
+      });
+  }, []); // Only run once on mount
 
   // Sync dreams when user changes
   useEffect(() => {
@@ -86,15 +91,6 @@ useEffect(() => {
         setDreams([]);
       });
   }, [currentUser, setDreams]);
-
-  // Persist currentUser
-  useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    } else {
-      localStorage.removeItem("currentUser");
-    }
-  }, [currentUser]);
 
   // Dream Handlers
   const handleAddDream = async (newDream) => {
@@ -156,7 +152,9 @@ useEffect(() => {
   const handleSignIn = ({ email, password }) => {
     signin(email, password)
       .then((data) => {
-        setCurrentUser({...data.user, token: data.token});
+        // Store both user and token
+        const userWithToken = { ...data.user, token: data.token };
+        setCurrentUser(userWithToken);
         closeModal(activeModal);
         navigate("/profile");
       })

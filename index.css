@@ -48,7 +48,3 @@ button {
   transition: border-color 0.25s;
   width: 100px;
 }
-
-button:hover {
-  border-color: #f19edc;
-}
