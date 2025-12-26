@@ -22,19 +22,20 @@
 .social-feed__refresh {
   width: 10px;
   background: none;
-  border: 1px solid #6c63ff;
   color: #6c63ff;
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 26px;
   transition: all 0.3s ease;
 }
 
 .social-feed__refresh:hover {
-  background-color: #6c63ff;
-  color: white;
+  background-color: none;
+  color: none;
+  border-color: none;
 }
+
 
 .social-feed__refresh:disabled {
   opacity: 0.5;
