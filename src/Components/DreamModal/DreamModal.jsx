@@ -20,6 +20,7 @@ function DreamModal({
     tags: "",
     location: "",
     moonSign: "",
+    isPublic: false,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +51,7 @@ function DreamModal({
         tags: dreamToEdit.tags || "",
         location: dreamToEdit.location || "",
         moonSign: dreamToEdit.moonSign || "",
+        isPublic: dreamToEdit.isPublic || false,
       });
     } else {
       setFormData({
@@ -59,13 +61,17 @@ function DreamModal({
         tags: "",
         location: "",
         moonSign: "",
+        isPublic: false,
       });
     }
   }, [isOpen, dreamToEdit]);
 
   function handleDreamChange(e) {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({ 
+      ...prev, 
+      [name]: type === 'checkbox' ? checked : value 
+    }));
   }
 
   // Handle category selection for multi-select dropdown
@@ -121,6 +127,7 @@ function DreamModal({
         tags: "",
         location: "",
         moonSign: "",
+        isPublic: false,
       });
     } catch (error) {
       console.error("Failed to fetch moon sign:", error);
@@ -203,6 +210,18 @@ function DreamModal({
       <p className="modal__label-caption">
         🌙 Moon Sign will be auto-populated based on your date and location.
       </p>
+      <label className="modal__checkbox-label">
+        <input
+          type="checkbox"
+          name="isPublic"
+          checked={formData.isPublic}
+          onChange={handleDreamChange}
+          className="modal__checkbox"
+        />
+        <span className="modal__checkbox-text">
+          Share this dream with the community
+        </span>
+      </label>
     </ModalWithForm>
   );
 }

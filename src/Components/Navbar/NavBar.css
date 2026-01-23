@@ -11,14 +11,22 @@
   justify-content: space-evenly;
   list-style-type: none;
   padding: 0;
-  margin-bottom: 20px;
+  margin: 0;
+  align-items: center;
 }
 
 .navbar {
   flex-shrink: 0;
-  /* padding: 20px; */
   background-color: transparent;
   z-index: 5;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  padding: 20px 0;
 }
 .navbar__add-dream {
   background-size: 35px;
@@ -27,10 +35,12 @@
   background-repeat: no-repeat;
   background-position: center;
   background-color: transparent;
+  border:none;
 }
 
 .navbar__menu {
   background-image: url("../../assets/Menu.svg");
+  border: none;
 }
 
 .navbar__user-profile {
@@ -40,14 +50,23 @@
   background-repeat: no-repeat;
   background-position: center;
   background-color: transparent;
+  border: none;
 }
+
+.navbar__home{
+  background-size: 35px;
+  background-image: url("../../assets//bold_logo.svg");
+  height: 50px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  border: none;
+}
+
+
 
 @media screen and (max-width: 768px) {
   .navbar {
-    padding: 0;
-    position: sticky;
-    bottom: 0;
-    backdrop-filter: blur(9px);
-    -webkit-backdrop-filter: blur(9px);
+    padding: 15px 0;
   }
 }
