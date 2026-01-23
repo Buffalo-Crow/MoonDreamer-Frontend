@@ -117,7 +117,9 @@ function App() {
   const handleSignIn = ({ email, password }) => {
     signin(email, password)
       .then((data) => {
-        setCurrentUser({...data.user, token: data.token});
+        // Store both user and token
+        const userWithToken = { ...data.user, token: data.token };
+        setCurrentUser(userWithToken);
         closeModal(activeModal);
         navigate("/profile");
       })

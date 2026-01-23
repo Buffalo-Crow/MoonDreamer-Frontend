@@ -1,0 +1,372 @@
+.social-feed {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  width: calc(100% - 40px); /* Account for padding to prevent overflow */
+  box-sizing: border-box;
+  height: calc(100vh - 200px); /* Take most of available height */
+  overflow-y: auto; /* Allow scrolling within the feed */
+  overflow-x: hidden;
+  flex-shrink: 0; /* Don't shrink when parent flexes */
+}
+
+.social-feed__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #333;
+}
+
+.social-feed__refresh {
+  width: 10px;
+  background: none;
+  color: #6c63ff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 26px;
+  transition: all 0.3s ease;
+}
+
+.social-feed__refresh:hover {
+  background-color: none;
+  color: none;
+  border-color: none;
+}
+
+
+.social-feed__refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.social-feed__header h2 {
+  color: white;
+  margin: 0;
+  font-size: 24px;
+}
+
+.social-feed__loading {
+  text-align: center;
+  color: white;
+  padding: 40px;
+  font-size: 18px;
+}
+
+.social-feed__empty {
+  text-align: center;
+  color: #888;
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.social-feed__posts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.social-feed__post {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.social-feed__post:hover {
+  transform: translateY(-2px);
+}
+
+.social-feed__post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.social-feed__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.social-feed__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.social-feed__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.social-feed__avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #6c63ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+}
+
+.social-feed__user-info h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.social-feed__date {
+  font-size: 12px;
+  color: #888;
+}
+
+.social-feed__moon-sign {
+  background-color: rgba(108, 99, 255, 0.2);
+  color: #a5a0ff;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.social-feed__content {
+  margin-bottom: 15px;
+}
+
+.social-feed__summary {
+  text-align: left;
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  white-space: pre-wrap;
+}
+
+.social-feed__categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.social-feed__category {
+  background-color: rgba(241, 158, 220, 0.2);
+  color: #f19edc;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.social-feed__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.social-feed__tag {
+  color: #888;
+  font-size: 12px;
+}
+
+.social-feed__actions {
+  display: flex;
+  gap: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-feed__like-btn,
+.social-feed__comment-btn {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.social-feed__like-btn:hover,
+.social-feed__comment-btn:hover {
+  color: white;
+}
+
+.social-feed__like-btn.liked {
+  color: #ff6b6b;
+}
+
+.social-feed__like-btn:disabled,
+.social-feed__comment-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.like-icon,
+.comment-icon {
+  font-size: 16px;
+}
+
+.social-feed__comment-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-feed__comment-input-field {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 8px 16px;
+  color: white;
+  font-size: 16px; /* Prevent mobile zoom on focus */
+  outline: none;
+  transition: all 0.3s ease;
+  -webkit-appearance: none; /* Remove iOS styling */
+  appearance: none;
+}
+
+.social-feed__comment-input-field:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: #6c63ff;
+}
+
+.social-feed__comment-input-field::placeholder {
+  color: #888;
+}
+
+.social-feed__comment-submit {
+  background-color: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 16px; /* Match input font size */
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0; /* Prevent button from shrinking */
+  -webkit-appearance: none; /* Remove iOS styling */
+  appearance: none;
+}
+
+.social-feed__comment-submit:hover:not(:disabled) {
+  background-color: #5850ff;
+  transform: translateY(-1px);
+}
+
+.social-feed__comment-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.social-feed__comments {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: left;
+}
+
+.social-feed__comment {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.social-feed__comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.social-feed__comment-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.social-feed__comment-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #6c63ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: white;
+}
+
+.social-feed__comment-content {
+  flex: 1;
+  text-align: left;
+}
+
+.social-feed__comment-username {
+  font-weight: 600;
+  font-size: 14px;
+  color: white;
+  margin-right: 8px;
+  display: block;
+  text-align: left;
+}
+
+.social-feed__comment-text {
+  font-size: 14px;
+  color: #ccc;
+  margin: 4px 0 0 0;
+  line-height: 1.4;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+@media screen and (max-width: 768px) {
+  .social-feed {
+    padding: 15px;
+  }
+  .social-feed__header h2{
+    font-size: 20px;
+  }
+  .social-feed__post {
+    padding: 15px;
+  }
+  
+  .social-feed__post-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .social-feed__actions {
+    gap: 15px;
+  }
+  
+  .social-feed__comment {
+    gap: 8px;
+  }
+  
+  .social-feed__comment-avatar {
+    width: 28px;
+    height: 28px;
+  }
+}
