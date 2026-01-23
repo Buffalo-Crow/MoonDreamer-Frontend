@@ -1,4 +1,4 @@
-const CACHE_NAME = 'moondreamer-v1';
+const CACHE_NAME = 'moondreamer-v2'; // Increment version for fresh cache
 const urlsToCache = [
   '/',
   '/index.html',

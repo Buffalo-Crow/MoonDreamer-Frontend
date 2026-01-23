@@ -43,35 +43,6 @@ function App() {
   const [dreamBeingEdited, setDreamBeingEdited] = useState(null);
   const navigate = useNavigate();
 
-useEffect(() => {
-  const storedUser = localStorage.getItem("currentUser");
-  const token = localStorage.getItem("jwtToken");
-  if (!token || !storedUser) return;
-
-  try {
-    const parsedUser = JSON.parse(storedUser);
-    setCurrentUser({ ...parsedUser, token });
-  } catch {
-    localStorage.removeItem("currentUser");
-    localStorage.removeItem("jwtToken");
-    setCurrentUser(null);
-    return;
-  }
-
-  // Optional: verify token with backend
-  getUserInfo()
-    .then((user) => setCurrentUser({ ...user, token }))
-    .catch((err) => {
-      if (err.message.includes("401")) { // only clear if unauthorized
-        localStorage.removeItem("currentUser");
-        localStorage.removeItem("jwtToken");
-        setCurrentUser(null);
-      } else {
-        console.warn("Token verification failed, keeping local data", err);
-      }
-    });
-}, [setCurrentUser]);
-
   // Sync dreams when user changes
   useEffect(() => {
     if (!currentUser) {
@@ -86,15 +57,6 @@ useEffect(() => {
         setDreams([]);
       });
   }, [currentUser, setDreams]);
-
-  // Persist currentUser
-  useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    } else {
-      localStorage.removeItem("currentUser");
-    }
-  }, [currentUser]);
 
   // Dream Handlers
   const handleAddDream = async (newDream) => {
@@ -142,9 +104,8 @@ useEffect(() => {
   const handleRegister = ({ username, email, password, avatar }) => {
     register({ username, email, password, avatar })
       .then(() => signin(email, password)) // auto-login after register
-      .then(() => getUserInfo())
-      .then((user) => {
-        setCurrentUser(user);
+      .then((data) => {
+        setCurrentUser({...data.user, token: data.token});
         closeModal(activeModal);
         navigate("/profile");
       })
