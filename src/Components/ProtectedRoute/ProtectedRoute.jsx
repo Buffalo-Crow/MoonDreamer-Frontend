@@ -9,8 +9,19 @@ export function ProtectedRoute({ children, anonymous = false }) {
   const location = useLocation();
   const from = location.state?.from || "/";
 
+  // Show loading state while checking authentication
   if (loadingUser) {
-    return <div>Loading...</div>;
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        fontSize: '1.2rem'
+      }}>
+        Loading...
+      </div>
+    );
   }
 
   if (anonymous && isLoggedIn) {
