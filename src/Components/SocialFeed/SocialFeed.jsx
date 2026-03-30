@@ -1,13 +1,23 @@
 import { useState, useEffect, useContext } from "react";
 import "./SocialFeed.css";
 import { UserContext } from "../../contexts/userContext";
-import { fetchPublicDreams, toggleDreamLike, addComment } from "../../utils/socialFeedApi";
+import {
+  fetchPublicDreams,
+  toggleDreamLike,
+  addComment,
+  deleteComment,
+  toggleCommentLike,
+} from "../../utils/socialFeedApi";
+import DeleteCommentModal from "../DeleteCommentModal/DeleteCommentModal";
 
 function SocialFeed() {
   const [publicDreams, setPublicDreams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [commentText, setCommentText] = useState({});
   const [showCommentInput, setShowCommentInput] = useState({});
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const { currentUser } = useContext(UserContext);
 
   useEffect(() => {
@@ -92,6 +102,74 @@ function SocialFeed() {
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const handleCommentLike = async (dreamId, commentId) => {
+    if (!currentUser) return;
+    try {
+      const updatedDream = await toggleCommentLike(dreamId, commentId);
+      setPublicDreams((prev) =>
+        prev.map((dream) =>
+          dream._id === dreamId
+            ? {
+                ...updatedDream,
+                user: updatedDream.userId || updatedDream.user,
+              }
+            : dream
+        )
+      );
+    } catch (err) {
+      console.error("Failed to toggle comment like:", err);
+    }
+  };
+
+  const openDeleteModal = (dreamId, commentId) => {
+    setCommentToDelete({ dreamId, commentId });
+    setDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModalOpen(false);
+    setCommentToDelete(null);
+  };
+
+  const handleDeleteComment = async () => {
+    if (!commentToDelete) return;
+    setDeleteLoading(true);
+    try {
+      const updatedDream = await deleteComment(
+        commentToDelete.dreamId,
+        commentToDelete.commentId
+      );
+      setPublicDreams((prev) =>
+        prev.map((dream) =>
+          dream._id === commentToDelete.dreamId
+            ? {
+                ...updatedDream,
+                user: updatedDream.userId || updatedDream.user,
+              }
+            : dream
+        )
+      );
+      closeDeleteModal();
+    } catch (err) {
+      console.error("Failed to delete comment:", err);
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const canDeleteComment = (dream, comment) => {
+    if (!currentUser) return false;
+    const currentUserId = currentUser._id || currentUser.uid;
+    const commentUserId =
+      comment.user?._id || comment.user;
+    const dreamOwnerId =
+      dream.user?._id || dream.userId?._id || dream.userId;
+    return (
+      currentUserId === commentUserId?.toString() ||
+      currentUserId === dreamOwnerId?.toString()
+    );
   };
 
   if (loading) {
@@ -228,26 +306,33 @@ function SocialFeed() {
                     .reverse()
                     .map((comment) => (
                     <div key={comment._id} className="social-feed__comment">
-                      <div className="social-feed__comment-avatar">
-                        {comment.user.avatar ? (
-                          <img
-                            src={comment.user.avatar}
-                            alt={comment.user.username}
-                          />
-                        ) : (
-                          <div className="social-feed__comment-avatar-placeholder">
-                            {comment.user.username.charAt(0).toUpperCase()}
-                          </div>
-                        )}
-                      </div>
-                      <div className="social-feed__comment-content">
-                        <span className="social-feed__comment-username">
-                          {comment.user.username}
+                      <div className="social-feed__comment-header">
+                        <span className="social-feed__comment-author">
+                          {comment.user?.username || "Anonymous"}
                         </span>
-                        <p className="social-feed__comment-text">
-                          {comment.text}
-                        </p>
+                        <div className="social-feed__comment-actions">
+                          <button
+                            className={`social-feed__comment-like-btn ${
+                              comment.likes?.includes(currentUser?._id || currentUser?.uid)
+                                ? "social-feed__comment-like-btn_active"
+                                : ""
+                            }`}
+                            onClick={() => handleCommentLike(dream._id, comment._id)}
+                          >
+                            ❤️ {comment.likes?.length || 0}
+                          </button>
+                          {canDeleteComment(dream, comment) && (
+                            <button
+                              className="social-feed__comment-delete-btn"
+                              onClick={() => openDeleteModal(dream._id, comment._id)}
+                              title="Delete comment"
+                            >
+                              🗑️
+                            </button>
+                          )}
+                        </div>
                       </div>
+                      <p className="social-feed__comment-text">{comment.text}</p>
                     </div>
                   ))}
                 </div>
@@ -256,6 +341,13 @@ function SocialFeed() {
           ))
         )}
       </div>
+
+      <DeleteCommentModal
+        isOpen={deleteModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={handleDeleteComment}
+        isLoading={deleteLoading}
+      />
     </div>
   );
 }

@@ -340,6 +340,53 @@
   word-wrap: break-word;
 }
 
+.social-feed__comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.social-feed__comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.social-feed__comment-like-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.social-feed__comment-like-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.social-feed__comment-like-btn_active {
+  color: #e74c3c;
+}
+
+.social-feed__comment-delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.social-feed__comment-delete-btn:hover {
+  opacity: 1;
+}
+
 @media screen and (max-width: 768px) {
   .social-feed {
     padding: 15px;

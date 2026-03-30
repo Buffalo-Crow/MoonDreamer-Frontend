@@ -27,8 +27,12 @@ export function UserProvider({ children }) {
           localStorage.setItem("currentUser", JSON.stringify(user));
         })
         .catch((err) => {
-          if (err.message.includes("401") || err.message.includes("403")) {
-            // Token is invalid, clear everything
+          if (
+            err.message.includes("401") ||
+            err.message.includes("403") ||
+            err.message.includes("No token found")
+          ) {
+            // Token is invalid or Firebase hasn't initialized, clear everything
             localStorage.removeItem("currentUser");
             localStorage.removeItem("jwtToken");
             setCurrentUser(null);

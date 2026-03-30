@@ -1,8 +1,13 @@
-// src/components/LoginModal/LoginModal.jsx
 import { useState } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 
-function LoginModal({ isOpen, closeActiveModal, onSignIn }) {
+function LoginModal({
+  isOpen,
+  closeActiveModal,
+  onSignIn,
+  onGoogleSignIn,
+  onForgotPassword,
+}) {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [backendError, setBackendError] = useState("");
@@ -18,13 +23,30 @@ function LoginModal({ isOpen, closeActiveModal, onSignIn }) {
     if (loading) return;
     setLoading(true);
     try {
-      // onSignIn is expected to return a promise that rejects on error
-      await onSignIn({ email: formData.email.trim(), password: formData.password });
+      await onSignIn({
+        email: formData.email.trim(),
+        password: formData.password,
+      });
       closeActiveModal();
       setFormData({ email: "", password: "" });
     } catch (err) {
       console.error("Login failed:", err);
       setBackendError(err.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogle = async () => {
+    setBackendError("");
+    if (loading) return;
+    setLoading(true);
+    try {
+      await onGoogleSignIn();
+      closeActiveModal();
+    } catch (err) {
+      console.error("Google login failed:", err);
+      setBackendError(err.message || "Google login failed");
     } finally {
       setLoading(false);
     }
@@ -66,6 +88,26 @@ function LoginModal({ isOpen, closeActiveModal, onSignIn }) {
           required
         />
       </label>
+
+      <button
+        type="button"
+        className="modal__google-button"
+        onClick={handleGoogle}
+        disabled={loading}
+      >
+        Continue with Google
+      </button>
+
+      <button
+        type="button"
+        className="modal__reset-link"
+        onClick={() => {
+          closeActiveModal();
+          onForgotPassword();
+        }}
+      >
+        Forgot Password?
+      </button>
 
       {backendError && <span className="modal__error">{backendError}</span>}
     </ModalWithForm>

@@ -13,6 +13,7 @@ import DreamModal from "../DreamModal/DreamModal.jsx";
 import EditProfile from "../EditProfileModal/EditProfile.jsx";
 import SignOutModal from "../SignOutModal/SignOutModal.jsx";
 import DeleteDreamModal from "../DeleteDreamModal/DeleteDreamModal.jsx";
+import ForgotPasswordModal from "../ForgotPasswordModal/ForgotPasswordModal.jsx";
 
 import {
   createDream,
@@ -20,7 +21,14 @@ import {
   deleteDream,
   editDreams,
 } from "../../utils/dreamApi.js";
-import { signin, signOut, register, getUserInfo } from "../../utils/auth.js";
+import {
+  signin,
+  signOut,
+  register,
+  getUserInfo,
+  googleSignIn,
+} from "../../utils/auth.js";
+import { onAuthChange } from "../../utils/firebase.js";
 import { MoonProvider } from "../../contexts/moonSignContext.jsx";
 import { ProtectedRoute } from "../ProtectedRoute/ProtectedRoute.jsx";
 import { DreamContext } from "../../contexts/dreamContext.jsx";
@@ -41,11 +49,32 @@ function App() {
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const { activeModal, openModal, closeModal } = useModal();
   const [dreamBeingEdited, setDreamBeingEdited] = useState(null);
+  const [authReady, setAuthReady] = useState(false);
   const navigate = useNavigate();
 
-  // Sync dreams when user changes
+  // Keep user in sync with Firebase auth
   useEffect(() => {
-    if (!currentUser) {
+    const unsubscribe = onAuthChange(async (firebaseUser) => {
+      if (firebaseUser) {
+        try {
+          const user = await getUserInfo();
+          setCurrentUser(user || null);
+        } catch (err) {
+          console.error("Failed to fetch user info:", err);
+          setCurrentUser(null);
+        }
+      } else {
+        setCurrentUser(null);
+      }
+      setAuthReady(true);
+    });
+
+    return () => unsubscribe();
+  }, [setCurrentUser]);
+
+  // Sync dreams when user changes (only after auth is ready)
+  useEffect(() => {
+    if (!authReady || !currentUser) {
       setDreams([]);
       return;
     }
@@ -56,7 +85,7 @@ function App() {
         console.error("Failed to load dreams:", err);
         setDreams([]);
       });
-  }, [currentUser, setDreams]);
+  }, [authReady, currentUser, setDreams]);
 
   // Dream Handlers
   const handleAddDream = async (newDream) => {
@@ -70,14 +99,12 @@ function App() {
 
   async function handleEditDream(updatedDreamData) {
     try {
-      // Call the API directly first
       const updatedDream = await editDreams(
         updatedDreamData._id,
         updatedDreamData
       );
 
-      // Then update the context state
-      updateDream(updatedDream); // Pass the returned dream object
+      updateDream(updatedDream);
 
       closeModal(activeModal);
       setDreamBeingEdited(null);
@@ -103,9 +130,9 @@ function App() {
   // Register Sign in and sign out handlers
   const handleRegister = ({ username, email, password, avatar }) => {
     register({ username, email, password, avatar })
-      .then(() => signin(email, password)) // auto-login after register
-      .then((data) => {
-        setCurrentUser({...data.user, token: data.token});
+      .then(() => getUserInfo())
+      .then((user) => {
+        setCurrentUser(user);
         closeModal(activeModal);
         navigate("/profile");
       })
@@ -116,10 +143,9 @@ function App() {
 
   const handleSignIn = ({ email, password }) => {
     signin(email, password)
-      .then((data) => {
-        // Store both user and token
-        const userWithToken = { ...data.user, token: data.token };
-        setCurrentUser(userWithToken);
+      .then(() => getUserInfo())
+      .then((user) => {
+        setCurrentUser(user);
         closeModal(activeModal);
         navigate("/profile");
       })
@@ -128,8 +154,21 @@ function App() {
       });
   };
 
+  const handleGoogleSignIn = () => {
+    googleSignIn()
+      .then(() => getUserInfo())
+      .then((user) => {
+        setCurrentUser(user);
+        closeModal(activeModal);
+        navigate("/profile");
+      })
+      .catch((err) => {
+        console.error("Google login error:", err);
+      });
+  };
+
   function handleSignOut() {
-    signOut(); // handles both user + token
+    signOut();
     setCurrentUser(null);
     navigate("/");
     clearMoonSignCache();
@@ -137,7 +176,6 @@ function App() {
   }
 
   // edit User Profile
-
   const handleEditProfileData = ({ username, avatar }) => {
     editProfile({ username, avatar })
       .then((res) => {
@@ -151,6 +189,7 @@ function App() {
   // ---------- Modal handlers ----------
   const handleRegisterClick = () => openModal("register");
   const handleLoginClick = () => openModal("login");
+  const handleForgotPasswordClick = () => openModal("forgot-password");
   const handleEditProfileClick = () => openModal("edit-profile");
   const handleDreamClick = () => openModal("add-dream");
   const handleDeleteDreamClick = (dream) => {
@@ -166,50 +205,52 @@ function App() {
   return (
     <div className="app">
       <MoonProvider>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div className="app__container-landingpage">
-                <Header />
-                <Main
-                  handleLoginClick={handleLoginClick}
-                  handleRegisterClick={handleRegisterClick}
-                  closeActiveModal={closeModal}
-                />
-                <Footer />
-              </div>
-            }
-          />
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home
-                  handleSignOutClick={handleSignOutClick}
-                  handleDreamClick={handleDreamClick}
-                  handleEditProfileClick={handleEditProfileClick}
-                />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile
-                  dreams={dreams}
-                  setDreams={setDreams}
-                  handleDreamClick={handleDreamClick}
-                  handleEditProfileClick={handleEditProfileClick}
-                  handleSignOutClick={handleSignOutClick}
-                  handleDeleteDreamClick={handleDeleteDreamClick}
-                  handleEditDreamClick={handleEditDreamClick}
-                />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+        {authReady && (
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <div className="app__container-landingpage">
+                  <Header />
+                  <Main
+                    handleLoginClick={handleLoginClick}
+                    handleRegisterClick={handleRegisterClick}
+                    closeActiveModal={closeModal}
+                  />
+                  <Footer />
+                </div>
+              }
+            />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Home
+                    handleSignOutClick={handleSignOutClick}
+                    handleDreamClick={handleDreamClick}
+                    handleEditProfileClick={handleEditProfileClick}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile
+                    dreams={dreams}
+                    setDreams={setDreams}
+                    handleDreamClick={handleDreamClick}
+                    handleEditProfileClick={handleEditProfileClick}
+                    handleSignOutClick={handleSignOutClick}
+                    handleDeleteDreamClick={handleDeleteDreamClick}
+                    handleEditDreamClick={handleEditDreamClick}
+                  />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        )}
 
         {/* Modals */}
         <EditProfile
@@ -233,6 +274,8 @@ function App() {
         />
         <LoginModal
           onSignIn={handleSignIn}
+          onGoogleSignIn={handleGoogleSignIn}
+          onForgotPassword={handleForgotPasswordClick}
           closeActiveModal={closeModal}
           isOpen={activeModal === "login"}
         />
@@ -240,6 +283,10 @@ function App() {
           onRegister={handleRegister}
           closeActiveModal={closeModal}
           isOpen={activeModal === "register"}
+        />
+        <ForgotPasswordModal
+          isOpen={activeModal === "forgot-password"}
+          closeActiveModal={closeModal}
         />
         <SignOutModal
           onConfirm={handleSignOut}

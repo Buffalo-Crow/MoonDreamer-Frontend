@@ -101,8 +101,8 @@
   height: 35px;
 }
 
-.modal__submit:hover{
-  color:#5e3955;
+.modal__submit:hover {
+  color: #5e3955;
 }
 
 .modal__close {
@@ -145,6 +145,20 @@
 .modal__submit-container {
   display: flex;
   justify-content: center;
+}
+
+.modal__google-button {
+  background: radial-gradient(black, transparent);
+  margin: 0 auto;
+  height: 27px;
+  width: 198px;
+}
+
+.modal__reset-link {
+  background: radial-gradient(black, transparent);
+  margin: 0 auto;
+  height: 27px;
+  width: 198px;
 }
 
 .moon-spinner,

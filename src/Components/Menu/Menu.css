@@ -19,9 +19,53 @@
   cursor: pointer;
 }
 
+.menu-feedback-modal {
+  position: fixed;
+  inset: 0;
+  min-height: 100dvh;
+  background-color: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.menu-feedback-modal__content {
+  position: relative;
+  width: min(92vw, 520px);
+  margin: auto;
+}
+
+.modal__close {
+  position: absolute;
+  z-index: 10;
+  top: 12px;
+  right: 7px;
+  width: 35px;
+  height: 35px;
+  background-image: url(../../assets/close.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.modal__close:hover {
+  opacity: 0.8;
+}
+
+
+
 @media screen and (max-width: 768px) {
   .menu-overlay {
     top: -222px;
     right: 4px;
+  }
+
+  .menu-feedback-modal__content {
+    width: min(94vw, 520px);
   }
 }

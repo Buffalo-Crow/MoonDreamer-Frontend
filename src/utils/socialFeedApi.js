@@ -1,4 +1,14 @@
+import { getAuth } from "firebase/auth";
+
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001";
+
+async function getToken() {
+  const auth = getAuth();
+  if (auth.currentUser) {
+    return await auth.currentUser.getIdToken();
+  }
+  throw new Error("Authentication required");
+}
 
 export async function fetchPublicDreams() {
   const response = await fetch(`${API_BASE}/api/dreams/public`);
@@ -19,11 +29,7 @@ export async function fetchPublicDreams() {
 }
 
 export async function toggleDreamLike(dreamId) {
-  const token = localStorage.getItem("jwtToken");
-  
-  if (!token) {
-    throw new Error("Authentication required");
-  }
+  const token = await getToken();
 
   const response = await fetch(`${API_BASE}/api/dreams/${dreamId}/like`, {
     method: "POST",
@@ -41,11 +47,7 @@ export async function toggleDreamLike(dreamId) {
 }
 
 export async function addComment(dreamId, commentText) {
-  const token = localStorage.getItem("jwtToken");
-  
-  if (!token) {
-    throw new Error("Authentication required");
-  }
+  const token = await getToken();
 
   const response = await fetch(`${API_BASE}/api/dreams/${dreamId}/comment`, {
     method: "POST",
@@ -58,6 +60,47 @@ export async function addComment(dreamId, commentText) {
 
   if (!response.ok) {
     throw new Error(`Failed to add comment: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+export async function deleteComment(dreamId, commentId) {
+  const token = await getToken();
+
+  const response = await fetch(
+    `${API_BASE}/api/dreams/${dreamId}/comment/${commentId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete comment: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+export async function toggleCommentLike(dreamId, commentId) {
+  const token = await getToken();
+
+  const response = await fetch(
+    `${API_BASE}/api/dreams/${dreamId}/comment/${commentId}/like`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to toggle comment like: ${response.status}`);
   }
 
   return await response.json();
