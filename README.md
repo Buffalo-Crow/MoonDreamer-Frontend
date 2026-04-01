@@ -18,7 +18,6 @@
 
 ## DESIGN 
 - Figma was used for this design. Which was a new and exciting software that I learned in order to visualize this project coming together. 
-[https]
 
 ## AI Assistance 
 - For this project AI was used to create the comments & likes section and was an assistant for more complex configuring of AI API usage and authorization flows. Copilot was just that a n added engineer helper for this project. The early stages of this project were completely coded without the use of AI and the infrastructure was built with my knowledge that was gained through Tripleten Bootcamp. I beleive that responsible use can assist in building a fully fledged application without underusing my skillset. 
@@ -29,6 +28,6 @@
 
 ### PHOTOS 
 
-![MOONDREAMER SCREENSHOT](MoonDreamer-Frontend/src/assets/images/IMG_5157.PNG)
-![MOONDREAMER SCREENSHOT](MoonDreamer-Frontend/src/assets/images/IMG_5158.PNG)
-![MOONDREAMER SCREENSHOT](MoonDreamer-Frontend/src/assets/images/IMG_5159.PNG)
+![MOONDREAMER SCREENSHOT](src/assets/images/IMG_4046.jpg)
+![MOONDREAMER SCREENSHOT](src/assets/images/IMG_4049.jpg)
+![MOONDREAMER SCREENSHOT](src/assets/images/IMG_4050.jpg)
