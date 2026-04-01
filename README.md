@@ -28,6 +28,6 @@
 
 ### PHOTOS 
 
-![MOONDREAMER SCREENSHOT](src/assets/images/IMG_4046.jpg)
-![MOONDREAMER SCREENSHOT](src/assets/images/IMG_4049.jpg)
-![MOONDREAMER SCREENSHOT](src/assets/images/IMG_4050.jpg)
+<img src="src/assets/images/IMG_4046.jpg" width="300" />
+<img src="src/assets/images/IMG_4049.jpg" width="300" />
+<img src="src/assets/images/IMG_4050.jpg" width="300" />
