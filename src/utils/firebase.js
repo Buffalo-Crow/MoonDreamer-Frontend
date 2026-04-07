@@ -19,6 +19,17 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+const missingFirebaseConfig = Object.entries(firebaseConfig)
+  .filter(([, value]) => typeof value !== "string" || value.trim() === "")
+  .map(([key]) => key);
+
+if (missingFirebaseConfig.length) {
+  throw new Error(
+    `Missing Firebase web config: ${missingFirebaseConfig.join(", ")}. `
+    + "Set the matching VITE_FIREBASE_* variables in the frontend Railway service and redeploy."
+  );
+}
+
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 

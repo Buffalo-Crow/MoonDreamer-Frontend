@@ -1,5 +1,5 @@
 // Dynamic cache version - change this when you want to force update
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const APP_CACHE = `moondreamer-app-${CACHE_VERSION}`;
 const ASSETS_CACHE = `moondreamer-assets-${CACHE_VERSION}`;
 
@@ -39,6 +39,12 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
+
+  // Cache Storage only supports GET requests.
+  if (request.method !== 'GET') {
+    event.respondWith(fetch(request));
+    return;
+  }
   
   // Don't cache API calls - always fetch fresh from backend
   if (request.url.includes('/api/')) {
