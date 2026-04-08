@@ -44,6 +44,7 @@ function App() {
     dreamToDelete,
     setSelectedDream,
     updateDream,
+    setFilterSign,
   } = useContext(DreamContext);
 
   const { currentUser, setCurrentUser } = useContext(UserContext);
@@ -92,8 +93,14 @@ function App() {
     try {
       const savedDream = await createDream(newDream);
       setDreams((prev) => [savedDream, ...prev]);
+      setSelectedDream(savedDream);
+      setFilterSign("ALL");
+      closeModal();
+      navigate("/profile");
+      return savedDream;
     } catch (err) {
       console.error("Failed to save dream:", err);
+      throw err;
     }
   };
 

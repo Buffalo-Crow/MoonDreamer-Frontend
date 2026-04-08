@@ -1,5 +1,5 @@
 import "./AiInsights.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { fetchAIInsightStream, saveAIInsight, fetchSavedInsights, deleteInsight } from "../../utils/aiInsights";
 import DeleteDreamModal from "../DeleteDreamModal/DeleteDreamModal";
 
@@ -11,6 +11,19 @@ function AIInsights({ dreamId }) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [insightToDelete, setInsightToDelete] = useState(null);
   const [isStreaming, setIsStreaming] = useState(false);
+  const aiResultRef = useRef(null);
+  const aiResultBottomRef = useRef(null);
+
+  const scrollToAiResult = () => {
+    const target = aiResultBottomRef.current || aiResultRef.current;
+    if (!target) return;
+
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest",
+    });
+  };
   
   const handleGenerate = async () => {
   setLoading(true);
@@ -54,6 +67,15 @@ function AIInsights({ dreamId }) {
     loadSavedInsights();
   }, [dreamId]);
 
+  useEffect(() => {
+    if (!isStreaming && !aiResult) {
+      return;
+    }
+
+    const frameId = requestAnimationFrame(scrollToAiResult);
+    return () => cancelAnimationFrame(frameId);
+  }, [isStreaming, aiResult]);
+
   return (
     <div className="ai-insights">
       <button className="ai-insights-button" onClick={handleGenerate} disabled={loading}>
@@ -86,13 +108,14 @@ function AIInsights({ dreamId }) {
         </div>
       )}
 
-      {aiResult && (
-        <div className="ai-result">
+      {(isStreaming || aiResult) && (
+        <div className="ai-result" ref={aiResultRef}>
           <h4>New AI Insight</h4>
           <p>
             {aiResult}
             {isStreaming && <span className="typing-cursor" aria-hidden="true">|</span>}
           </p>
+          <span ref={aiResultBottomRef} aria-hidden="true" />
           <button 
             className="save-insight-button"
             disabled={isStreaming}

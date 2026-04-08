@@ -117,7 +117,7 @@ function DreamModal({
 
       console.log(isEditMode ? "Editing dream:" : "Adding dream:", dreamData);
 
-      onSubmitDream(dreamData);
+      await onSubmitDream(dreamData);
       closeActiveModal();
 
       setFormData({
