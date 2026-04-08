@@ -64,3 +64,14 @@
 	background-color: #f19edc;
 	color: #111;
 }
+
+.feedback-form__actions button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.feedback-form__status {
+	margin: 8px 0 0;
+	font-size: 0.9rem;
+	color: #f19edc;
+}

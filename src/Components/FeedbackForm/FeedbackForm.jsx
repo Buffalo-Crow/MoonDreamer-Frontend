@@ -1,5 +1,6 @@
 import "./FeedbackForm.css";
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 
 export function FeedbackForm({ onClose }) {
   const [formData, setFormData] = useState({
@@ -10,22 +11,64 @@ export function FeedbackForm({ onClose }) {
     issues: "",
     date: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
 
-  const handleSubmit = (event) => {
+  const emailJsServiceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const emailJsTemplateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+  const emailJsPublicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Feedback submitted:", formData);
 
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      feedback: "",
-      issues: "",
-      date: "",
-    });
+    if (!emailJsServiceId || !emailJsTemplateId || !emailJsPublicKey) {
+      setStatusMessage(
+        "Email service is not configured. Add VITE_EMAILJS_SERVICE_ID, VITE_EMAILJS_TEMPLATE_ID, and VITE_EMAILJS_PUBLIC_KEY."
+      );
+      return;
+    }
 
-    if (onClose) {
-      onClose();
+    setIsSubmitting(true);
+    setStatusMessage("");
+
+    const templateParams = {
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      from_name: `${formData.firstName} ${formData.lastName}`.trim(),
+      from_email: formData.email,
+      feedback_date: formData.date,
+      feedback: formData.feedback,
+      issues: formData.issues,
+      message: `Feedback:\n${formData.feedback}\n\nIssues:\n${formData.issues}`,
+    };
+
+    try {
+      await emailjs.send(
+        emailJsServiceId,
+        emailJsTemplateId,
+        templateParams,
+        emailJsPublicKey
+      );
+
+      setStatusMessage("Feedback sent. Thank you!");
+
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        feedback: "",
+        issues: "",
+        date: "",
+      });
+
+      if (onClose) {
+        onClose();
+      }
+    } catch (error) {
+      console.error("EmailJS submit failed", error);
+      setStatusMessage("Failed to send feedback. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -99,11 +142,18 @@ export function FeedbackForm({ onClose }) {
           />
         </label>
         <div className="feedback-form__actions">
-          <button type="submit">Submit</button>
-          <button type="button" onClick={onClose}>
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Sending..." : "Submit"}
+          </button>
+          <button type="button" onClick={onClose} disabled={isSubmitting}>
             Cancel
           </button>
         </div>
+        {statusMessage && (
+          <p className="feedback-form__status" role="status">
+            {statusMessage}
+          </p>
+        )}
       </form>
     </div>
   );

@@ -4,6 +4,27 @@ import { getMoonSignFromLocationAndDate } from "../../utils/getMoonSignFromLocat
 import { formatDateForInput } from "../../utils/dateHelper";
 import { MultiSelectDropdown } from "../MultiSelectDropDown/MultiSelectDropDown";
 
+function parseTagsInput(tagsValue) {
+  if (!tagsValue || typeof tagsValue !== "string") return [];
+
+  return tagsValue
+    .split(/[\s,]+/)
+    .map((tag) => tag.trim().replace(/^#+/, ""))
+    .filter(Boolean);
+}
+
+function formatTagsForInput(tagsValue) {
+  if (Array.isArray(tagsValue)) {
+    return tagsValue
+      .map((tag) => String(tag).trim().replace(/^#+/, ""))
+      .filter(Boolean)
+      .map((tag) => `#${tag}`)
+      .join(" ");
+  }
+
+  return tagsValue || "";
+}
+
 function DreamModal({
   isOpen,
   closeActiveModal,
@@ -48,7 +69,7 @@ function DreamModal({
         date: formatDateForInput(dreamToEdit.date || ""),
         summary: dreamToEdit.summary || "",
         categories: dreamToEdit.categories || "",
-        tags: dreamToEdit.tags || "",
+        tags: formatTagsForInput(dreamToEdit.tags),
         location: dreamToEdit.location || "",
         moonSign: dreamToEdit.moonSign || "",
         isPublic: dreamToEdit.isPublic || false,
@@ -108,6 +129,7 @@ function DreamModal({
 
       const dreamData = {
         ...formData,
+        tags: parseTagsInput(formData.tags),
         moonSign,
         // Include the dream ID when editing
         ...(isEditMode && dreamToEdit && { 
@@ -190,7 +212,7 @@ function DreamModal({
           className="modal__input"
           type="text"
           name="tags"
-          placeholder="Add any tags for your dream"
+          placeholder="#lucid #flying #ocean"
           onChange={handleDreamChange}
           value={formData.tags}
         />
