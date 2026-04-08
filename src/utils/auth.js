@@ -19,7 +19,7 @@ export const signin = async (email, password) => {
   return { token };
 };
 
-export const register = async ({ username, email, password, avatar }) => {
+export const register = async ({ username, email, password, avatar, betaAgreementAcceptance }) => {
   const userCredential = await firebaseSignUp(email, password);
   const token = await userCredential.user.getIdToken();
 
@@ -34,6 +34,7 @@ export const register = async ({ username, email, password, avatar }) => {
       username,
       email,
       avatar,
+      betaAgreementAcceptance,
     }),
   });
 

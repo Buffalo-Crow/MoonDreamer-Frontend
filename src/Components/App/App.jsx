@@ -135,8 +135,8 @@ function App() {
   };
 
   // Register Sign in and sign out handlers
-  const handleRegister = ({ username, email, password, avatar }) => {
-    register({ username, email, password, avatar })
+  const handleRegister = ({ username, email, password, avatar, betaAgreementAcceptance }) => {
+    register({ username, email, password, avatar, betaAgreementAcceptance })
       .then(() => getUserInfo())
       .then((user) => {
         setCurrentUser(user);

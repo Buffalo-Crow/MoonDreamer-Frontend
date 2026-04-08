@@ -1,0 +1,171 @@
+.register-agreement {
+  margin: 10px;
+  padding: 14px;
+  border: 1px solid #5e3955;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.register-agreement__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.register-agreement__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.register-agreement__status {
+  margin: 4px 0 0;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.register-agreement__toggle {
+  border: 1px solid #5e3955;
+  background: transparent;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.register-agreement__badge {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #274f8a;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.register-agreement__section {
+  padding: 14px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.register-agreement__section-title {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.register-agreement__paragraph {
+  margin: 0 0 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.register-agreement__highlight {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-left: 3px solid #4b8cff;
+  background: rgba(75, 140, 255, 0.08);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.register-agreement__list {
+  margin: 0 0 12px 18px;
+  padding: 0;
+}
+
+.register-agreement__list li {
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.register-agreement__footer {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.register-agreement-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.82);
+}
+
+.register-agreement-modal__dialog {
+  position: relative;
+  width: min(94vw, 760px);
+  max-height: 88vh;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 14px;
+  background: #050505;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.register-agreement-modal__close {
+  align-self: flex-end;
+  border: 1px solid #5e3955;
+  background: transparent;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.register-agreement-modal__content {
+  margin-top: 10px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.register-agreement-modal__actions {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.register-agreement-modal__hint {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.register-agreement-modal__accept {
+  border: 1px solid #5e3955;
+  background: #274f8a;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.register-agreement-modal__accept:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 640px) {
+  .register-agreement__header,
+  .register-agreement-modal__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .register-agreement-modal__dialog {
+    padding: 18px;
+  }
+}

@@ -114,7 +114,7 @@ export function FeedbackForm({ onClose }) {
         <label>
           Email Address
           <input
-            type="text"
+            type="email"
             name="email"
             value={formData.email}
             required
