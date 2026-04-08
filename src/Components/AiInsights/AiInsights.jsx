@@ -1,6 +1,6 @@
 import "./AiInsights.css";
 import { useState, useEffect } from "react";
-import { fetchAIInsight, saveAIInsight, fetchSavedInsights, deleteInsight } from "../../utils/aiInsights";
+import { fetchAIInsightStream, saveAIInsight, fetchSavedInsights, deleteInsight } from "../../utils/aiInsights";
 import DeleteDreamModal from "../DeleteDreamModal/DeleteDreamModal";
 
 function AIInsights({ dreamId }) {
@@ -10,17 +10,33 @@ function AIInsights({ dreamId }) {
   const [savedInsights, setSavedInsights] = useState([]);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [insightToDelete, setInsightToDelete] = useState(null);
+  const [isStreaming, setIsStreaming] = useState(false);
   
   const handleGenerate = async () => {
   setLoading(true);
+  setIsStreaming(true);
   setError(null);
+  setAiResult("");
+
   try {
-    const result = await fetchAIInsight("single", dreamId);
-    setAiResult(result);
+    await fetchAIInsightStream("single", dreamId, {
+      onChunk: (token) => {
+        setAiResult((prev) => prev + token);
+      },
+      onDone: (payload) => {
+        if (payload?.aiResult) {
+          setAiResult(payload.aiResult);
+        }
+      },
+      onError: (streamErr) => {
+        throw streamErr;
+      },
+    });
   } catch (err) {
     setError("Failed to generate insight. Try again later.")
     console.error("AI insight error:", err);
   } finally{
+    setIsStreaming(false);
     setLoading(false);
   }
 };
@@ -73,9 +89,13 @@ function AIInsights({ dreamId }) {
       {aiResult && (
         <div className="ai-result">
           <h4>New AI Insight</h4>
-          <p>{aiResult}</p>
+          <p>
+            {aiResult}
+            {isStreaming && <span className="typing-cursor" aria-hidden="true">|</span>}
+          </p>
           <button 
             className="save-insight-button"
+            disabled={isStreaming}
             onClick={async () => {
               try {
                 const savedInsight = await saveAIInsight(dreamId, aiResult);

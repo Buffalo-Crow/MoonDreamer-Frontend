@@ -54,6 +54,11 @@
   background-color: #45a049;
 }
 
+.save-insight-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .saved-insights {
   margin-top: 1.5rem;
   border-top: 1px solid #eee;
@@ -103,4 +108,21 @@
 
 .ai-result p {
   white-space: pre-wrap; /* preserve paragraphs in generated insight */
+}
+
+.typing-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  animation: ai-cursor-blink 1s steps(1, end) infinite;
+}
+
+@keyframes ai-cursor-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
 }
