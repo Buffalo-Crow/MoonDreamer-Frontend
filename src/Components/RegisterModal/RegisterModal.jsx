@@ -279,7 +279,7 @@ const handleSubmit = async (e) => {
       <div className="register-agreement">
         <div className="register-agreement__header">
           <div>
-            <p className="register-agreement__title">Dream Journal Beta User Agreement</p>
+            <p className="register-agreement__title">MoonDreamer Beta User Agreement</p>
             <p className="register-agreement__status">
               {formData.acceptedBetaAgreement
                 ? `Accepted - version ${BETA_AGREEMENT_VERSION}`
@@ -308,11 +308,10 @@ const handleSubmit = async (e) => {
           >
             <button
               type="button"
-              className="register-agreement-modal__close"
+              className="modal__close"
+              aria-label="Close agreement"
               onClick={() => setIsAgreementOpen(false)}
-            >
-              Close
-            </button>
+            ></button>
 
             <div
               ref={agreementContentRef}

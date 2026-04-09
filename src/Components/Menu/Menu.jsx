@@ -20,9 +20,9 @@ function Menu({
         <div className="menu-panel">
           <button onClick={() => navigate("/home")}>Home</button>
           <button onClick={() => navigate("/profile")}>Profile</button>
+          <button onClick={handleOpenFeedback}>Feedback</button>
           <button onClick={onSignOutClick}>Sign Out</button>
           <button onClick={onClose}>Exit</button>
-          <button onClick={handleOpenFeedback}>Feedback</button>
         </div>
       </div>
 

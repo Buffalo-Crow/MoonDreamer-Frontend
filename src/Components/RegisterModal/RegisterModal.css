@@ -26,13 +26,21 @@
 }
 
 .register-agreement__toggle {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
   border: 1px solid #5e3955;
   background: transparent;
   color: #ffffff;
   border-radius: 999px;
-  padding: 6px 12px;
+  padding: 8px 14px;
   cursor: pointer;
   font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .register-agreement__badge {
@@ -114,16 +122,6 @@
   flex-direction: column;
 }
 
-.register-agreement-modal__close {
-  align-self: flex-end;
-  border: 1px solid #5e3955;
-  background: transparent;
-  color: #ffffff;
-  border-radius: 999px;
-  padding: 6px 12px;
-  cursor: pointer;
-}
-
 .register-agreement-modal__content {
   margin-top: 10px;
   overflow-y: auto;
@@ -145,12 +143,20 @@
 }
 
 .register-agreement-modal__accept {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
   border: 1px solid #5e3955;
   background: #274f8a;
   color: #ffffff;
   border-radius: 999px;
   padding: 10px 16px;
   cursor: pointer;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .register-agreement-modal__accept:disabled {
