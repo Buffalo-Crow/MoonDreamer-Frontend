@@ -1,5 +1,14 @@
+import { getAuth } from "firebase/auth";
+
 export const apiFetch = async (url, options = {}) => {
-  const token = localStorage.getItem("jwtToken"); // automatically get token
+  const auth = getAuth();
+  const firebaseToken = await auth.currentUser?.getIdToken();
+  const token = firebaseToken || localStorage.getItem("jwtToken");
+
+  if (firebaseToken) {
+    localStorage.setItem("jwtToken", firebaseToken);
+  }
+
   const headers = {
     "Content-Type": "application/json",
     ...(token ? { Authorization: `Bearer ${token}` } : {}),

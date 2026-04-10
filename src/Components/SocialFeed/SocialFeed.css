@@ -66,6 +66,24 @@
   color: #ffb0b0;
 }
 
+.social-feed__typing-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  animation: social-feed-cursor-blink 1s steps(1, end) infinite;
+}
+
+@keyframes social-feed-cursor-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
 .social-feed__loading {
   text-align: center;
   color: white;

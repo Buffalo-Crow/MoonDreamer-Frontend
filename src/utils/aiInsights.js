@@ -1,10 +1,27 @@
 import { apiFetch } from "./apiFetch";
+import { getAuth } from "firebase/auth";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001";
 const BASE_URL = `${API_BASE}/api/insights`;
 
+const getAuthToken = async () => {
+  const auth = getAuth();
+  const firebaseToken = await auth.currentUser?.getIdToken();
+  if (firebaseToken) {
+    localStorage.setItem("jwtToken", firebaseToken);
+    return firebaseToken;
+  }
 
-export const fetchAIInsight = async (scope, dreamId = null) => {
+  const cachedToken = localStorage.getItem("jwtToken");
+  if (cachedToken) {
+    return cachedToken;
+  }
+
+  throw new Error("Authentication required");
+};
+
+
+export const fetchAIInsight = async (scope, dreamId = null, payload = {}) => {
   let url = "";
 
   if (scope === "single") {
@@ -12,40 +29,44 @@ export const fetchAIInsight = async (scope, dreamId = null) => {
     url = `${BASE_URL}/single/${dreamId}`;
   } else if (scope === "user-pattern") {
     url = `${BASE_URL}/user-pattern`;
-  } else if (scope === "community") {
-    url = `${BASE_URL}/community`;
   } else {
     throw new Error(`Invalid scope: ${scope}`);
   }
 
-  const body = JSON.stringify({});
+  const body = JSON.stringify(payload);
   const data = await apiFetch(url, { method: "POST", body });
 
   if (!data.aiResult) throw new Error("No aiResult returned from backend");
   return data.aiResult;
 };
 
-export const fetchAIInsightStream = async (scope, dreamId = null, handlers = {}) => {
+export const fetchAIInsightStream = async (
+  scope,
+  dreamId = null,
+  handlers = {},
+  payload = {}
+) => {
   const { onChunk, onDone, onError } = handlers;
+  let url = "";
 
-  if (scope !== "single") {
+  if (scope === "single") {
+    if (!dreamId) {
+      throw new Error("dreamId is required for single insights");
+    }
+    url = `${BASE_URL}/single/${dreamId}/stream`;
+  } else {
     throw new Error("Streaming is currently available for single insights only");
   }
 
-  if (!dreamId) {
-    throw new Error("dreamId is required for single insights");
-  }
-
-  const token = localStorage.getItem("jwtToken");
-  const url = `${BASE_URL}/single/${dreamId}/stream`;
+  const token = await getAuthToken();
 
   const response = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({}),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
