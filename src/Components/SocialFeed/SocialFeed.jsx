@@ -8,10 +8,16 @@ import {
   deleteComment,
   toggleCommentLike,
 } from "../../utils/socialFeedApi";
+import { fetchAIInsight } from "../../utils/aiInsights";
+import { zodiacSigns } from "../../utils/constants";
 import DeleteCommentModal from "../DeleteCommentModal/DeleteCommentModal";
 
 function SocialFeed() {
   const [publicDreams, setPublicDreams] = useState([]);
+  const [selectedSign, setSelectedSign] = useState("ALL");
+  const [collectiveInsight, setCollectiveInsight] = useState("");
+  const [collectiveInsightLoading, setCollectiveInsightLoading] = useState(false);
+  const [collectiveInsightError, setCollectiveInsightError] = useState("");
   const [loading, setLoading] = useState(true);
   const [commentText, setCommentText] = useState({});
   const [showCommentInput, setShowCommentInput] = useState({});
@@ -92,6 +98,26 @@ function SocialFeed() {
 
   const handleCommentChange = (dreamId, value) => {
     setCommentText(prev => ({ ...prev, [dreamId]: value }));
+  };
+
+  const handleGenerateCollectiveInsight = async () => {
+    if (!currentUser) {
+      setCollectiveInsightError("Sign in to generate collective insights.");
+      return;
+    }
+
+    setCollectiveInsightLoading(true);
+    setCollectiveInsightError("");
+
+    try {
+      const insight = await fetchAIInsight("community");
+      setCollectiveInsight(insight || "No insight was generated.");
+    } catch (error) {
+      console.error("Failed to generate collective insight:", error);
+      setCollectiveInsightError("Unable to generate collective insight right now.");
+    } finally {
+      setCollectiveInsightLoading(false);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -176,26 +202,72 @@ function SocialFeed() {
     return <div className="social-feed__loading">Loading dreams...</div>;
   }
 
+  const filteredDreams =
+    selectedSign === "ALL"
+      ? publicDreams
+      : publicDreams.filter(
+          (dream) =>
+            String(dream.moonSign || "").toLowerCase() === selectedSign
+        );
+
   return (
     <div className="social-feed">
       <div className="social-feed__header">
-        <h2>Collective Dreams</h2>
         <button
-          className="social-feed__refresh"
-          onClick={loadPublicDreams}
-          disabled={loading}
+          className="social-feed__collective-btn"
+          onClick={handleGenerateCollectiveInsight}
+          disabled={collectiveInsightLoading}
         >
-          {loading ? "🔄" : "↻"}
+          {collectiveInsightLoading ? "Generating..." : "Generate Collective Insight"}
         </button>
       </div>
 
+      <div className="social-feed__filters" aria-label="Filter dreams by moon sign">
+        <button
+          className={`social-feed__filter-btn ${
+            selectedSign === "ALL" ? "social-feed__filter-btn_active" : ""
+          }`}
+          onClick={() => setSelectedSign("ALL")}
+          type="button"
+        >
+          All Dreams
+        </button>
+
+        {zodiacSigns.map((sign) => (
+          <button
+            key={sign}
+            className={`social-feed__filter-btn ${
+              selectedSign === sign ? "social-feed__filter-btn_active" : ""
+            }`}
+            onClick={() => setSelectedSign(sign)}
+            type="button"
+          >
+            {sign.charAt(0).toUpperCase() + sign.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      {(collectiveInsight || collectiveInsightError) && (
+        <div className="social-feed__collective-panel">
+          {collectiveInsightError ? (
+            <p className="social-feed__collective-error">{collectiveInsightError}</p>
+          ) : (
+            <p className="social-feed__collective-text">{collectiveInsight}</p>
+          )}
+        </div>
+      )}
+
       <div className="social-feed__posts">
-        {publicDreams.length === 0 ? (
+        {filteredDreams.length === 0 ? (
           <div className="social-feed__empty">
-            <p>No dreams shared yet. Be the first to share your dream!</p>
+            <p>
+              {publicDreams.length === 0
+                ? "No dreams shared yet. Be the first to share your dream!"
+                : "No dreams found for that moon sign yet."}
+            </p>
           </div>
         ) : (
-          publicDreams.map((dream) => (
+          filteredDreams.map((dream) => (
             <div key={dream._id} className="social-feed__post">
               <div className="social-feed__post-header">
                 <div className="social-feed__user">
@@ -277,17 +349,18 @@ function SocialFeed() {
               {/* Comment input */}
               {showCommentInput[dream._id] && currentUser && (
                 <div className="social-feed__comment-input">
-                  <input
-                    type="text"
+                  <textarea
                     placeholder="Add a comment..."
                     value={commentText[dream._id] || ''}
                     onChange={(e) => handleCommentChange(dream._id, e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
                         handleComment(dream._id, commentText[dream._id]);
                       }
                     }}
                     className="social-feed__comment-input-field"
+                    rows={2}
                   />
                   <button
                     onClick={() => handleComment(dream._id, commentText[dream._id])}

@@ -12,40 +12,58 @@
 
 .social-feed__header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #333;
+  margin-bottom: 10px;
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
-.social-feed__refresh {
-  width: 10px;
-  background: none;
-  color: #6c63ff;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 26px;
-  transition: all 0.3s ease;
+.social-feed__collective-btn {
+  border: 1px solid #5e3955;
+  background: #f19edc;
+  color: #000;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  width: fit-content;
+  min-width: 0;
 }
 
-.social-feed__refresh:hover {
-  background-color: none;
-  color: none;
-  border-color: none;
+.social-feed__collective-btn:hover:not(:disabled) {
+  background: #f7b8e5;
 }
 
-
-.social-feed__refresh:disabled {
+.social-feed__collective-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.social-feed__header h2 {
-  color: white;
+.social-feed__collective-panel {
+  border: 1px solid rgba(241, 158, 220, 0.4);
+  background: rgba(241, 158, 220, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.social-feed__collective-text,
+.social-feed__collective-error {
   margin: 0;
-  font-size: 24px;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: left;
+  white-space: pre-wrap;
+}
+
+.social-feed__collective-text {
+  color: #f8d5ea;
+}
+
+.social-feed__collective-error {
+  color: #ffb0b0;
 }
 
 .social-feed__loading {
@@ -62,6 +80,38 @@
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   margin: 20px 0;
+}
+
+.social-feed__filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.social-feed__filter-btn {
+  border: 1px solid rgba(241, 158, 220, 0.6);
+  background: rgba(241, 158, 220, 0.1);
+  color: #f8d5ea;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 12px;
+  line-height: 1.2;
+  width: fit-content;
+  min-width: 0;
+}
+
+.social-feed__filter-btn:hover {
+  color: #fff;
+  border-color: #f19edc;
+  background: rgba(241, 158, 220, 0.2);
+}
+
+.social-feed__filter-btn_active {
+  color: #000;
+  border-color: #f19edc;
+  background: #f19edc;
 }
 
 .social-feed__posts {
@@ -182,7 +232,8 @@
 
 .social-feed__actions {
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 8px;
   padding-top: 15px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -193,9 +244,12 @@
   border: none;
   color: #888;
   cursor: pointer;
+  width: fit-content;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 6px;
+  padding: 6px 8px;
   font-size: 14px;
   transition: color 0.3s ease;
 }
@@ -223,6 +277,7 @@
 .social-feed__comment-input {
   display: flex;
   gap: 10px;
+  align-items: flex-end;
   margin-top: 15px;
   padding-top: 15px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -230,16 +285,22 @@
 
 .social-feed__comment-input-field {
   flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 3.8rem;
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  padding: 8px 16px;
+  border-radius: 16px;
+  padding: 10px 16px;
   color: white;
   font-size: 16px; /* Prevent mobile zoom on focus */
+  line-height: 1.4;
   outline: none;
   transition: all 0.3s ease;
   -webkit-appearance: none; /* Remove iOS styling */
   appearance: none;
+  resize: vertical;
+  overflow-y: auto;
 }
 
 .social-feed__comment-input-field:focus {
@@ -257,6 +318,8 @@
   border: none;
   border-radius: 20px;
   padding: 8px 20px;
+  width: fit-content;
+  min-width: 0;
   font-size: 16px; /* Match input font size */
   font-weight: 500;
   cursor: pointer;
@@ -391,9 +454,17 @@
   .social-feed {
     padding: 15px;
   }
-  .social-feed__header h2{
-    font-size: 20px;
+
+  .social-feed__filters {
+    gap: 6px;
+    margin-bottom: 14px;
   }
+
+  .social-feed__filter-btn {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+
   .social-feed__post {
     padding: 15px;
   }
@@ -405,7 +476,16 @@
   }
   
   .social-feed__actions {
-    gap: 15px;
+    gap: 6px;
+  }
+
+  .social-feed__comment-input {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .social-feed__comment-submit {
+    align-self: flex-end;
   }
   
   .social-feed__comment {

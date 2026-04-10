@@ -33,36 +33,43 @@ function EditProfile({
   };
 
   const handleEditProfileSubmit = async (e) => {
-  e.preventDefault();
-  if (!formData.avatar && !formData.username) return;
+    e.preventDefault();
 
-  let avatarUrl = currentUser.avatar; // keep existing if no new file
+    const normalizedUsername = (formData.username || "").trim();
+    const usernameChanged = normalizedUsername !== (currentUser?.username || "");
+    const avatarChanged = formData.avatar instanceof File;
 
-  try {
-    if (formData.avatar instanceof File) {
-      const form = new FormData();
-      form.append("avatar", formData.avatar);
-
-      const res = await fetch(`${API_URL}/api/upload-avatar`, {
-        method: "POST",
-        body: form,
-        credentials: "include",
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
-      avatarUrl = data.avatar;
+    if (!usernameChanged && !avatarChanged) {
+      return;
     }
 
-   
-    onEditProfileData({
-      username: formData.username,
-      avatar: avatarUrl,
-    });
-  } catch (err) {
-    console.error(err);
-  }
-};
+    const updates = {};
+
+    if (usernameChanged) {
+      updates.username = normalizedUsername;
+    }
+
+    try {
+      if (avatarChanged) {
+        const form = new FormData();
+        form.append("avatar", formData.avatar);
+
+        const res = await fetch(`${API_URL}/api/upload-avatar`, {
+          method: "POST",
+          body: form,
+          credentials: "include",
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Upload failed");
+        updates.avatar = data.avatar;
+      }
+
+      onEditProfileData(updates);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <ModalWithForm
@@ -81,7 +88,6 @@ function EditProfile({
           name="username"
           placeholder="Current User Name"
           value={formData.username}
-          required
           onChange={handleEditProfileChange}
         />
       </label>{" "}
@@ -91,7 +97,6 @@ function EditProfile({
           className="modal__input"
           type="file"
           accept="image/*"
-          required
           onChange={(e) => {
             const file = e.target.files[0];
             if (file) setFormData((prev) => ({ ...prev, avatar: file }));
