@@ -213,3 +213,40 @@
   border-radius: 2px;
   text-align: left;
 }
+
+.modal__summary-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.modal__speech-btn {
+  width: auto !important;
+  min-width: 120px;
+  min-height: 33px;
+  max-width: max-content;
+  border: 1px solid #6c63ff;
+  border-radius: 999px;
+  background: rgba(108, 99, 255, 0.15);
+  color: #e8e6ff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.modal__speech-btn:hover {
+  background: rgba(108, 99, 255, 0.28);
+}
+
+.modal__speech-btn_active {
+  border-color: #ff8bd6;
+  background: rgba(255, 139, 214, 0.22);
+  color: #ffe8f7;
+}
+
+.modal__speech-status {
+  color: #f8d5ea;
+  font-size: 12px;
+}

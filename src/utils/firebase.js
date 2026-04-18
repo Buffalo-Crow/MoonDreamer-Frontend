@@ -30,8 +30,8 @@ if (missingFirebaseConfig.length) {
   );
 }
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+export const firebaseApp = initializeApp(firebaseConfig);
+export const auth = getAuth(firebaseApp);
 
 export const firebaseSignIn = (email, password) =>
   signInWithEmailAndPassword(auth, email, password);

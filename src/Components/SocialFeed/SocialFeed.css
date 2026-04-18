@@ -130,6 +130,26 @@
   color: #000;
   border-color: #f19edc;
   background: #f19edc;
+  box-shadow: 0 0 0 1px rgba(241, 158, 220, 0.45);
+}
+
+.social-feed__filter-btn_active:hover {
+  color: #000;
+  border-color: #f19edc;
+  background: #f19edc;
+}
+
+.social-feed__filter-btn[aria-pressed="true"] {
+  color: #000;
+  border-color: #f19edc;
+  background: #f19edc;
+  box-shadow: 0 0 0 1px rgba(241, 158, 220, 0.45);
+}
+
+.social-feed__filter-btn[aria-pressed="true"]:hover {
+  color: #000;
+  border-color: #f19edc;
+  background: #f19edc;
 }
 
 .social-feed__posts {

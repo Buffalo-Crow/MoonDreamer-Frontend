@@ -200,10 +200,6 @@ function SocialFeed() {
     return currentUserId === commentUserId?.toString();
   };
 
-  if (loading) {
-    return <div className="social-feed__loading">Loading dreams...</div>;
-  }
-
   const filteredDreams = useMemo(
     () =>
       selectedSign === "ALL"
@@ -215,6 +211,10 @@ function SocialFeed() {
     [selectedSign, publicDreams]
   );
 
+  if (loading) {
+    return <div className="social-feed__loading">Loading dreams...</div>;
+  }
+
   return (
     <div className="social-feed">
       <div className="social-feed__filters" aria-label="Filter dreams by moon sign">
@@ -223,6 +223,7 @@ function SocialFeed() {
             selectedSign === "ALL" ? "social-feed__filter-btn_active" : ""
           }`}
           onClick={() => setSelectedSign("ALL")}
+          aria-pressed={selectedSign === "ALL"}
           type="button"
         >
           All Dreams
@@ -235,6 +236,7 @@ function SocialFeed() {
               selectedSign === sign ? "social-feed__filter-btn_active" : ""
             }`}
             onClick={() => setSelectedSign(sign)}
+            aria-pressed={selectedSign === sign}
             type="button"
           >
             {sign.charAt(0).toUpperCase() + sign.slice(1)}

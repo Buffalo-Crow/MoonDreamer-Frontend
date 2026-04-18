@@ -1,11 +1,36 @@
 import { useState, useLayoutEffect } from "react";
 import "./TutorialOverlay.css";
 
-const STORAGE_KEY = "moondreamer_tutorial_v1_seen";
+const STORAGE_KEY = "moondreamer_tutorial_v2_seen";
 
 function getTutorialStorageKey(user) {
-  const userId = user?.firebaseUid || user?._id || "anonymous";
+  // Keep key stable across sessions by preferring Mongo _id when available.
+  // _id is consistent even if Firebase user shape varies during hydration.
+  const userId = user?._id || user?.firebaseUid || "anonymous";
   return `${STORAGE_KEY}_${userId}`;
+}
+
+function getLegacyTutorialStorageKeys(user) {
+  const keys = [];
+  if (user?.firebaseUid) {
+    keys.push(`${STORAGE_KEY}_${user.firebaseUid}`);
+  }
+  if (user?._id) {
+    keys.push(`${STORAGE_KEY}_${user._id}`);
+  }
+  keys.push(STORAGE_KEY);
+  return [...new Set(keys)];
+}
+
+function hasSeenTutorialForUser(user) {
+  const stableKey = getTutorialStorageKey(user);
+  if (localStorage.getItem(stableKey)) {
+    return true;
+  }
+
+  return getLegacyTutorialStorageKeys(user).some((key) =>
+    Boolean(localStorage.getItem(key))
+  );
 }
 
 const STEPS = [
@@ -15,7 +40,7 @@ const STEPS = [
     description: "Tap here to catch your dream before it drifts away.",
   },
   {
-    selector: ".zodiac-sidebar__filters",
+    selector: [".zodiac-sidebar__filters", ".social-feed__filters"],
     title: "Moon Sign Filters",
     description:
       "These moon sign charms sort your dreams by cosmic mood. Pick All Dreams to open the full night sky again.",
@@ -47,14 +72,39 @@ function TutorialOverlay({ onFinish, storageKey = STORAGE_KEY }) {
   // Retries until the target element appears in the DOM (handles navigation delays).
   useLayoutEffect(() => {
     let retryId = null;
+    let attempts = 0;
+    let isDisposed = false;
+
+    function getTargetElement() {
+      const selectors = Array.isArray(currentStep.selector)
+        ? currentStep.selector
+        : [currentStep.selector];
+      return selectors
+        .map((selector) => document.querySelector(selector))
+        .find(Boolean);
+    }
 
     function measure() {
-      const el = document.querySelector(currentStep.selector);
+      if (isDisposed) return;
+
+      const el = getTargetElement();
       if (!el) {
-        // Element not yet in DOM — retry on next animation frame
+        // If the current step target doesn't exist on this page, move on.
+        if (attempts >= 180) {
+          if (step < STEPS.length - 1) {
+            setStep((s) => s + 1);
+          } else {
+            finish();
+          }
+          return;
+        }
+
+        attempts += 1;
+        // Element not yet in DOM — retry on next animation frame.
         retryId = requestAnimationFrame(measure);
         return;
       }
+
       const rect = el.getBoundingClientRect();
       const pad = 10;
       setSpotlight({
@@ -69,12 +119,15 @@ function TutorialOverlay({ onFinish, storageKey = STORAGE_KEY }) {
 
     function onResize() {
       cancelAnimationFrame(retryId);
+      attempts = 0;
       measure();
     }
 
+    setSpotlight(null);
     measure();
     window.addEventListener("resize", onResize);
     return () => {
+      isDisposed = true;
       cancelAnimationFrame(retryId);
       window.removeEventListener("resize", onResize);
     };
@@ -177,4 +230,9 @@ function TutorialOverlay({ onFinish, storageKey = STORAGE_KEY }) {
 }
 
 export default TutorialOverlay;
-export { STORAGE_KEY, getTutorialStorageKey };
+export {
+  STORAGE_KEY,
+  getTutorialStorageKey,
+  getLegacyTutorialStorageKeys,
+  hasSeenTutorialForUser,
+};

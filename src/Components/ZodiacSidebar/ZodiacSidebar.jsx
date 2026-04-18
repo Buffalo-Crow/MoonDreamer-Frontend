@@ -22,6 +22,7 @@ function ZodiacSidebar() {
           className={`zodiac-sidebar__filter-btn ${
             filterSign === "ALL" ? "zodiac-sidebar__filter-btn_active" : ""
           }`}
+          aria-pressed={filterSign === "ALL"}
           type="button"
         >
           All Dreams
@@ -34,6 +35,7 @@ function ZodiacSidebar() {
             className={`zodiac-sidebar__filter-btn ${
               filterSign === sign ? "zodiac-sidebar__filter-btn_active" : ""
             }`}
+            aria-pressed={filterSign === sign}
             type="button"
           >
             {sign.charAt(0).toUpperCase() + sign.slice(1)}

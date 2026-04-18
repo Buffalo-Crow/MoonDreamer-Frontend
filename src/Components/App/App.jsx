@@ -16,6 +16,7 @@ import DeleteDreamModal from "../DeleteDreamModal/DeleteDreamModal.jsx";
 import ForgotPasswordModal from "../ForgotPasswordModal/ForgotPasswordModal.jsx";
 import TutorialOverlay, {
   getTutorialStorageKey,
+  hasSeenTutorialForUser,
 } from "../TutorialOverlay/TutorialOverlay.jsx";
 
 import {
@@ -87,7 +88,9 @@ function App() {
       return;
     }
 
-    if (localStorage.getItem(tutorialStorageKey)) {
+    if (hasSeenTutorialForUser(currentUser)) {
+      // Normalize any legacy key to the stable key so future checks are consistent.
+      localStorage.setItem(tutorialStorageKey, "true");
       setShowTutorial(false);
       return;
     }

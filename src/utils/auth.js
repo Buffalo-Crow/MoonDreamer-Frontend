@@ -79,7 +79,7 @@ export const googleSignIn = async () => {
   localStorage.removeItem("jwtToken");
   await firebaseLogout();
   throw new Error(
-    "No account found. Please register first before signing in with Google."
+    "No matching profile was found for this Google login. If you already registered with email/password, sign in with that method instead."
   );
 };
 

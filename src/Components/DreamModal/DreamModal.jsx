@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import { getMoonSignFromLocationAndDate } from "../../utils/getMoonSignFromLocationAndDate";
 import { formatDateForInput } from "../../utils/dateHelper";
@@ -25,6 +25,22 @@ function formatTagsForInput(tagsValue) {
   return tagsValue || "";
 }
 
+function normalizeSpeechPunctuation(text) {
+  if (!text || typeof text !== "string") return "";
+
+  return text
+    .replace(/\bfull stop\b|\(?\s*period\s*\)?/gi, ".")
+    .replace(/\bcomma\b/gi, ",")
+    .replace(/\bquestion mark\b/gi, "?")
+    .replace(/\bexclamation point\b|\bexclamation mark\b/gi, "!")
+    .replace(/\bsemicolon\b/gi, ";")
+    .replace(/\bcolon\b/gi, ":")
+    .replace(/\s+([,.;:!?])/g, "$1")
+    .replace(/([,.;:!?])(\S)/g, "$1 $2")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 function DreamModal({
   isOpen,
   closeActiveModal,
@@ -46,6 +62,12 @@ function DreamModal({
 
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
+
+  const isSpeechRecognitionSupported =
+    typeof window !== "undefined"
+    && ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
 
   // Define available categories
   const categoryOptions = [
@@ -91,6 +113,26 @@ function DreamModal({
     }
   }, [isOpen, dreamToEdit]);
 
+  useEffect(() => {
+    if (isOpen) return;
+
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+    setIsListening(false);
+  }, [isOpen]);
+
+  useEffect(
+    () => () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+        recognitionRef.current = null;
+      }
+    },
+    []
+  );
+
   function handleDreamChange(e) {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({ 
@@ -105,6 +147,107 @@ function DreamModal({
         return updated;
       });
     }
+  }
+
+  function appendToSummary(text) {
+    if (!text) return;
+
+    setFormData((prev) => {
+      const trimmedText = text.trim();
+      if (!trimmedText) return prev;
+
+      const startsWithPunctuation = /^[,.;:!?]/.test(trimmedText);
+      const needsSpace =
+        prev.summary && !prev.summary.endsWith(" ") && !startsWithPunctuation;
+      const baseSummary = startsWithPunctuation
+        ? prev.summary.replace(/\s+$/g, "")
+        : prev.summary;
+
+      return {
+        ...prev,
+        summary: `${baseSummary}${needsSpace ? " " : ""}${trimmedText}`,
+      };
+    });
+
+    if (errors.summary || errors.general) {
+      setErrors((prev) => {
+        const updated = { ...prev };
+        delete updated.summary;
+        delete updated.general;
+        return updated;
+      });
+    }
+  }
+
+  function stopSpeechRecognition() {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+    setIsListening(false);
+  }
+
+  function startSpeechRecognition() {
+    if (!isSpeechRecognitionSupported) {
+      setErrors((prev) => ({
+        ...prev,
+        general:
+          "Speech-to-text is not supported in this browser. Try Chrome, Edge, or Safari.",
+      }));
+      return;
+    }
+
+    const SpeechRecognitionAPI =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognitionAPI();
+
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    recognition.onresult = (event) => {
+      const transcript = Array.from(event.results)
+        .slice(event.resultIndex)
+        .map((result) => result[0]?.transcript || "")
+        .join(" ")
+        .trim();
+
+      appendToSummary(normalizeSpeechPunctuation(transcript));
+    };
+
+    recognition.onerror = (event) => {
+      if (event.error === "not-allowed") {
+        setErrors((prev) => ({
+          ...prev,
+          general:
+            "Microphone access was blocked. Please allow microphone permission and try again.",
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          general: "Speech recognition stopped unexpectedly. Please try again.",
+        }));
+      }
+      stopSpeechRecognition();
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+      recognitionRef.current = null;
+    };
+
+    recognitionRef.current = recognition;
+    setIsListening(true);
+    recognition.start();
+  }
+
+  function handleSpeechToggle() {
+    if (isListening) {
+      stopSpeechRecognition();
+      return;
+    }
+
+    startSpeechRecognition();
   }
 
   // Handle category selection for multi-select dropdown
@@ -221,6 +364,24 @@ function DreamModal({
       </label>
       <label className="modal__label">
         Summary
+        <div className="modal__summary-tools">
+          <button
+            type="button"
+            className={`modal__speech-btn ${isListening ? "modal__speech-btn_active" : ""}`}
+            onClick={handleSpeechToggle}
+            aria-pressed={isListening}
+            title={
+              isSpeechRecognitionSupported
+                ? "Dictate your dream summary"
+                : "Speech-to-text not supported in this browser"
+            }
+          >
+            {isListening ? "Stop Listening" : "Speak Summary"}
+          </button>
+          {isListening && (
+            <span className="modal__speech-status">Listening...</span>
+          )}
+        </div>
         <textarea
           className="modal__input"
           name="summary"

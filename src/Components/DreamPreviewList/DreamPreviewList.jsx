@@ -6,15 +6,6 @@ import Moon from "../../assets/Moon.svg";
 
 function DreamPreviewList({ onSelectDream }) {
   const { dreams, filterSign } = useContext(DreamContext);
-  const maxPreviewChars = window.innerWidth > 885 ? 150 : 90;
-
-  const getPreviewSummary = (summary = "") => {
-    if (summary.length <= maxPreviewChars) {
-      return summary;
-    }
-
-    return `${summary.substring(0, maxPreviewChars)}...`;
-  };
 
   const displayedDreams = (
     filterSign === "ALL"
@@ -61,7 +52,7 @@ function DreamPreviewList({ onSelectDream }) {
                 </div>
                 <div className="dream-preview__text-block">
                   <p className="dream-preview__description">
-                    {getPreviewSummary(dream.summary)}
+                    {dream.summary}
                   </p>
                   <span className="dream-preview__date">
                     {new Date(dream.date).toLocaleDateString()}
