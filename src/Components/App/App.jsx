@@ -14,6 +14,9 @@ import EditProfile from "../EditProfileModal/EditProfile.jsx";
 import SignOutModal from "../SignOutModal/SignOutModal.jsx";
 import DeleteDreamModal from "../DeleteDreamModal/DeleteDreamModal.jsx";
 import ForgotPasswordModal from "../ForgotPasswordModal/ForgotPasswordModal.jsx";
+import TutorialOverlay, {
+  getTutorialStorageKey,
+} from "../TutorialOverlay/TutorialOverlay.jsx";
 
 import {
   createDream,
@@ -51,7 +54,9 @@ function App() {
   const { activeModal, openModal, closeModal } = useModal();
   const [dreamBeingEdited, setDreamBeingEdited] = useState(null);
   const [authReady, setAuthReady] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
   const navigate = useNavigate();
+  const tutorialStorageKey = getTutorialStorageKey(currentUser);
 
   // Keep user in sync with Firebase auth
   useEffect(() => {
@@ -72,6 +77,27 @@ function App() {
 
     return () => unsubscribe();
   }, [setCurrentUser]);
+
+  // Show onboarding once for authenticated users, after UI has had a moment to mount.
+  useEffect(() => {
+    if (!authReady) return;
+
+    if (!currentUser) {
+      setShowTutorial(false);
+      return;
+    }
+
+    if (localStorage.getItem(tutorialStorageKey)) {
+      setShowTutorial(false);
+      return;
+    }
+
+    const timerId = window.setTimeout(() => {
+      setShowTutorial(true);
+    }, 150);
+
+    return () => window.clearTimeout(timerId);
+  }, [authReady, currentUser, tutorialStorageKey]);
 
   // Sync dreams when user changes (only after auth is ready)
   useEffect(() => {
@@ -300,6 +326,12 @@ function App() {
           isOpen={activeModal === "sign-out"}
           closeActiveModal={closeModal}
         />
+        {showTutorial && (
+          <TutorialOverlay
+            storageKey={tutorialStorageKey}
+            onFinish={() => setShowTutorial(false)}
+          />
+        )}
       </MoonProvider>
     </div>
   );

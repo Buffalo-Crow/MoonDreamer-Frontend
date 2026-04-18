@@ -1,0 +1,120 @@
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: all;
+}
+
+.tutorial-overlay__mask {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Animated ring around the highlighted element */
+.tutorial-overlay__ring {
+  position: fixed;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+  animation: tutorial-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes tutorial-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Tooltip card */
+.tutorial-overlay__tooltip {
+  position: fixed;
+  width: 280px;
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 16px 18px;
+  color: #f0f0f0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: tutorial-fade-in 0.2s ease;
+}
+
+@keyframes tutorial-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tutorial-overlay__step-count {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 0 6px;
+  letter-spacing: 0.5px;
+}
+
+.tutorial-overlay__title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px;
+  color: #ffffff;
+}
+
+.tutorial-overlay__description {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 14px;
+}
+
+.tutorial-overlay__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.tutorial-overlay__skip {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 0;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: max-content !important;
+}
+
+.tutorial-overlay__skip:hover {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.tutorial-overlay__next {
+  background: #7b5ea7;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 20px;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: max-content !important;
+  transition: background 0.15s;
+}
+
+.tutorial-overlay__next:hover {
+  background: #9370c0;
+}

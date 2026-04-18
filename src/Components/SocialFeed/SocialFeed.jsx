@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import "./SocialFeed.css";
 import { UserContext } from "../../contexts/userContext";
 import {
@@ -31,7 +31,7 @@ function SocialFeed() {
       }
 
       loadPublicDreams();
-      intervalId = setInterval(loadPublicDreams, 30000);
+      intervalId = setInterval(loadPublicDreams, 60000);
     };
 
     const stopPolling = () => {
@@ -204,13 +204,16 @@ function SocialFeed() {
     return <div className="social-feed__loading">Loading dreams...</div>;
   }
 
-  const filteredDreams =
-    selectedSign === "ALL"
-      ? publicDreams
-      : publicDreams.filter(
-          (dream) =>
-            String(dream.moonSign || "").toLowerCase() === selectedSign
-        );
+  const filteredDreams = useMemo(
+    () =>
+      selectedSign === "ALL"
+        ? publicDreams
+        : publicDreams.filter(
+            (dream) =>
+              String(dream.moonSign || "").toLowerCase() === selectedSign
+          ),
+    [selectedSign, publicDreams]
+  );
 
   return (
     <div className="social-feed">
