@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { DreamContext } from "../../contexts/dreamContext";
 import "./ZodiacSidebar.css";
-import { zodiacImages, zodiacSigns } from "../../utils/constants";
+import { zodiacSigns } from "../../utils/constants";
 
 function ZodiacSidebar() {
   const { filterSign, setFilterSign } = useContext(DreamContext);
@@ -15,39 +15,32 @@ function ZodiacSidebar() {
   };
 
   return (
-    <>
-      <nav className="zodiac-sidebar" aria-label="Zodiac Filter Navigation">
-        <ul className="zodiac-sidebar__sign_list">
-          {zodiacSigns.map((sign) => (
-            <li key={sign} className="zodiac-sidebar__sign-item">
-              <button
-                onClick={() => handleSignClick(sign)}
-                className={`zodiac-sidebar__sign-button zodiac-sidebar__sign-button--${sign} ${
-                  filterSign === sign ? "active" : ""
-                }`}
-              >
-                <img
-                  src={zodiacImages[sign]}
-                  alt={`${sign} symbol`}
-                  className="zodiac-sidebar__sign-icon"
-                />
-                {sign}
-              </button>
-            </li>
-          ))}
-        </ul>
-        <div className="zodiac-sidebar__all-button-container">
+    <nav className="zodiac-sidebar" aria-label="Zodiac filter navigation">
+      <div className="zodiac-sidebar__filters" role="group" aria-label="Filter dreams by moon sign">
+        <button
+          onClick={handleAllClick}
+          className={`zodiac-sidebar__filter-btn ${
+            filterSign === "ALL" ? "zodiac-sidebar__filter-btn_active" : ""
+          }`}
+          type="button"
+        >
+          All Dreams
+        </button>
+
+        {zodiacSigns.map((sign) => (
           <button
-            onClick={handleAllClick}
-            className={`zodiac-sidebar__all-button ${
-              filterSign === "ALL" ? "active" : ""
+            key={sign}
+            onClick={() => handleSignClick(sign)}
+            className={`zodiac-sidebar__filter-btn ${
+              filterSign === sign ? "zodiac-sidebar__filter-btn_active" : ""
             }`}
+            type="button"
           >
-            All dreams
+            {sign.charAt(0).toUpperCase() + sign.slice(1)}
           </button>
-        </div>
-      </nav>
-    </>
+        ))}
+      </div>
+    </nav>
   );
 }
 

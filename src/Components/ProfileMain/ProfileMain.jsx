@@ -5,8 +5,7 @@ import DreamPreviewList from "../DreamPreviewList/DreamPreviewList";
 import DreamDetailCard from "../DreamDetailCard/DreamDetailCard";
 import { DreamContext } from "../../contexts/dreamContext";
 
-function ProfileMain({ handleDeleteDreamClick, onEditDreamClick, dreams }) {
-  const [selectedSign, setSelectedSign] = useState(null);
+function ProfileMain({ handleDeleteDreamClick, onEditDreamClick }) {
   const { selectedDream, setSelectedDream } = useContext(DreamContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 885);
 
@@ -16,29 +15,26 @@ function ProfileMain({ handleDeleteDreamClick, onEditDreamClick, dreams }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const filteredDreams = selectedSign
-    ? dreams.filter((dream) => dream.sign === selectedSign)
-    : dreams;
-
   return (
     <div className={`profile-main ${selectedDream ? "dream-selected" : ""}`}>
       {!(isMobile && selectedDream) && (
-        <ZodiacSidebar onSelectSign={setSelectedSign} />
+        <aside className="profile-main__sidebar">
+          <ZodiacSidebar />
+        </aside>
       )}
 
-      {selectedDream ? (
-        <DreamDetailCard
-          handleDeleteDreamClick={handleDeleteDreamClick}
-          onEditDreamClick={onEditDreamClick}
-          dream={selectedDream}
-          onBack={() => setSelectedDream(null)}
-        />
-      ) : (
-        <DreamPreviewList
-          dreams={filteredDreams}
-          onSelectDream={setSelectedDream}
-        />
-      )}
+      <section className="profile-main__content">
+        {selectedDream ? (
+          <DreamDetailCard
+            handleDeleteDreamClick={handleDeleteDreamClick}
+            onEditDreamClick={onEditDreamClick}
+            dream={selectedDream}
+            onBack={() => setSelectedDream(null)}
+          />
+        ) : (
+          <DreamPreviewList onSelectDream={setSelectedDream} />
+        )}
+      </section>
     </div>
   );
 }

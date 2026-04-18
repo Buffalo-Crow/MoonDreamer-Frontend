@@ -1,11 +1,18 @@
+.menu-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background-color: rgba(0, 0, 0, 0.18);
+}
+
 .menu-overlay {
   position: absolute;
-  top: -212px;
   right: 125px;
+  bottom: 110px;
   background-color: #f19edc;
   border-radius: 10px;
   padding: 10px;
-  z-index: 1000;
+  z-index: 9999;
 }
 
 .menu-panel button {
@@ -61,7 +68,7 @@
 
 @media screen and (max-width: 768px) {
   .menu-overlay {
-    top: -222px;
+    bottom: 94px;
     right: 4px;
   }
 

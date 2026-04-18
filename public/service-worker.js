@@ -39,6 +39,12 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
+
+  // The Cache API only supports GET requests.
+  if (request.method !== 'GET') {
+    event.respondWith(fetch(request));
+    return;
+  }
   
   // Don't cache API calls - always fetch fresh from backend
   if (request.url.includes('/api/')) {

@@ -202,3 +202,14 @@
     padding: 7px;
   }
 }
+
+.modal__general-error {
+  color: #ff4444;
+  font-size: 13px;
+  padding: 10px 10px;
+  background-color: rgba(255, 68, 68, 0.1);
+  border-left: 3px solid #ff4444;
+  margin: 10px 10px 12px 10px;
+  border-radius: 2px;
+  text-align: left;
+}

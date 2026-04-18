@@ -23,11 +23,42 @@ function SocialFeed() {
   const { currentUser } = useContext(UserContext);
 
   useEffect(() => {
-    loadPublicDreams();
+    let intervalId = null;
 
-    const interval = setInterval(loadPublicDreams, 30000);
+    const startPolling = () => {
+      if (intervalId) {
+        return;
+      }
 
-    return () => clearInterval(interval);
+      loadPublicDreams();
+      intervalId = setInterval(loadPublicDreams, 30000);
+    };
+
+    const stopPolling = () => {
+      if (!intervalId) {
+        return;
+      }
+
+      clearInterval(intervalId);
+      intervalId = null;
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        startPolling();
+        return;
+      }
+
+      stopPolling();
+    };
+
+    handleVisibilityChange();
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      stopPolling();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   const loadPublicDreams = async () => {
@@ -166,12 +197,7 @@ function SocialFeed() {
     const currentUserId = currentUser._id || currentUser.uid;
     const commentUserId =
       comment.user?._id || comment.user;
-    const dreamOwnerId =
-      dream.user?._id || dream.userId?._id || dream.userId;
-    return (
-      currentUserId === commentUserId?.toString() ||
-      currentUserId === dreamOwnerId?.toString()
-    );
+    return currentUserId === commentUserId?.toString();
   };
 
   if (loading) {
@@ -335,33 +361,50 @@ function SocialFeed() {
                     .reverse()
                     .map((comment) => (
                     <div key={comment._id} className="social-feed__comment">
-                      <div className="social-feed__comment-header">
-                        <span className="social-feed__comment-author">
-                          {comment.user?.username || "Anonymous"}
-                        </span>
-                        <div className="social-feed__comment-actions">
-                          <button
-                            className={`social-feed__comment-like-btn ${
-                              comment.likes?.includes(currentUser?._id || currentUser?.uid)
-                                ? "social-feed__comment-like-btn_active"
-                                : ""
-                            }`}
-                            onClick={() => handleCommentLike(dream._id, comment._id)}
-                          >
-                            ❤️ {comment.likes?.length || 0}
-                          </button>
-                          {canDeleteComment(dream, comment) && (
-                            <button
-                              className="social-feed__comment-delete-btn"
-                              onClick={() => openDeleteModal(dream._id, comment._id)}
-                              title="Delete comment"
-                            >
-                              🗑️
-                            </button>
+                      <div className="social-feed__comment-user">
+                        <div className="social-feed__comment-avatar">
+                          {comment.user?.avatar ? (
+                            <img
+                              src={comment.user.avatar}
+                              alt={comment.user?.username || "Anonymous"}
+                            />
+                          ) : (
+                            <div className="social-feed__comment-avatar-placeholder">
+                              {(comment.user?.username || "A").charAt(0).toUpperCase()}
+                            </div>
                           )}
                         </div>
+                        <span className="social-feed__comment-username">
+                          {comment.user?.username || "Anonymous"}
+                        </span>
                       </div>
-                      <p className="social-feed__comment-text">{comment.text}</p>
+
+                      <div className="social-feed__comment-content">
+                        <div className="social-feed__comment-header">
+                          <div className="social-feed__comment-actions">
+                            <button
+                              className={`social-feed__comment-like-btn ${
+                                comment.likes?.includes(currentUser?._id || currentUser?.uid)
+                                  ? "social-feed__comment-like-btn_active"
+                                  : ""
+                              }`}
+                              onClick={() => handleCommentLike(dream._id, comment._id)}
+                            >
+                              ❤️ {comment.likes?.length || 0}
+                            </button>
+                            {canDeleteComment(dream, comment) && (
+                              <button
+                                className="social-feed__comment-delete-btn"
+                                onClick={() => openDeleteModal(dream._id, comment._id)}
+                                title="Delete comment"
+                              >
+                                🗑️
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                        <p className="social-feed__comment-text">{comment.text}</p>
+                      </div>
                     </div>
                   ))}
                 </div>

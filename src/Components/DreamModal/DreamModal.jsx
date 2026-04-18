@@ -45,6 +45,7 @@ function DreamModal({
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
   // Define available categories
   const categoryOptions = [
@@ -62,6 +63,9 @@ function DreamModal({
 
   useEffect(() => {
     if (!isOpen) return;
+
+    // Reset errors when modal opens
+    setErrors({});
 
     if (dreamToEdit) {
       console.log("Setting form data from dreamToEdit:", dreamToEdit);
@@ -93,6 +97,14 @@ function DreamModal({
       ...prev, 
       [name]: type === 'checkbox' ? checked : value 
     }));
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => {
+        const updated = { ...prev };
+        delete updated[name];
+        return updated;
+      });
+    }
   }
 
   // Handle category selection for multi-select dropdown
@@ -151,9 +163,27 @@ function DreamModal({
         moonSign: "",
         isPublic: false,
       });
+      setErrors({});
     } catch (error) {
-      console.error("Failed to fetch moon sign:", error);
-      alert("Failed to submit dream. Please check the location and try again.");
+      console.error("Error submitting dream:", error);
+      
+      // Parse validation errors from response
+      if (error.response?.status === 400 && error.response?.data?.message) {
+        // Try to extract field-specific error
+        const message = error.response.data.message;
+        // Check for Mongoose validation errors in the message
+        if (message.includes('summary') && message.includes('shorter than the minimum')) {
+          setErrors({ summary: 'Dream summary must be at least 15 characters' });
+        } else if (message.includes('Path')) {
+          setErrors({ general: 'Please check all fields and try again.' });
+        } else {
+          setErrors({ general: message });
+        }
+      } else if (error.message) {
+        setErrors({ general: error.message });
+      } else {
+        setErrors({ general: 'Failed to submit dream. Please try again.' });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -171,6 +201,11 @@ function DreamModal({
       loadingMessage="Calculating your moon sign..."
       customSpinner={<div className="moon-spinner small" />}
     >
+      {errors.general && (
+        <div className="modal__general-error">
+          {errors.general}
+        </div>
+      )}
       <label className="modal__label">
         Date
         <input
@@ -182,6 +217,7 @@ function DreamModal({
           onChange={handleDreamChange}
           required
         />
+        {errors.date && <span className="modal__error">{errors.date}</span>}
       </label>
       <label className="modal__label">
         Summary
@@ -195,6 +231,7 @@ function DreamModal({
           autoComplete="off"
           required
         />
+        {errors.summary && <span className="modal__error">{errors.summary}</span>}
       </label>
       <label className="modal__label">
         Categories
@@ -205,6 +242,7 @@ function DreamModal({
           placeholder="Select dream categories..."
           className="modal__input"
         />
+        {errors.categories && <span className="modal__error">{errors.categories}</span>}
       </label>
       <label className="modal__label">
         Tags
@@ -216,6 +254,7 @@ function DreamModal({
           onChange={handleDreamChange}
           value={formData.tags}
         />
+        {errors.tags && <span className="modal__error">{errors.tags}</span>}
       </label>
       <label className="modal__label">
         Location of your Dream
@@ -228,6 +267,7 @@ function DreamModal({
           onChange={handleDreamChange}
           required
         />
+        {errors.location && <span className="modal__error">{errors.location}</span>}
       </label>
       <p className="modal__label-caption">
         🌙 Moon Sign will be auto-populated based on your date and location.

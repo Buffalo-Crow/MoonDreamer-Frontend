@@ -35,7 +35,13 @@ export async function createDream(dreamData) {
     headers,
     body: JSON.stringify(dreamData),
   });
-  if (!res.ok) throw new Error("Failed to create dream");
+  
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    const error = new Error(errorData.message || "Failed to create dream");
+    error.response = { status: res.status, data: errorData };
+    throw error;
+  }
   return res.json();
 }
 
@@ -47,7 +53,13 @@ export async function editDreams(id, updates) {
     headers,
     body: JSON.stringify(updates),
   });
-  if (!res.ok) throw new Error("Failed to update dream");
+  
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    const error = new Error(errorData.message || "Failed to update dream");
+    error.response = { status: res.status, data: errorData };
+    throw error;
+  }
   return res.json();
 }
 
@@ -58,6 +70,12 @@ export async function deleteDream(id) {
     method: "DELETE",
     headers,
   });
-  if (!res.ok) throw new Error("Failed to delete dream");
+  
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    const error = new Error(errorData.message || "Failed to delete dream");
+    error.response = { status: res.status, data: errorData };
+    throw error;
+  }
   return res.json();
 }
