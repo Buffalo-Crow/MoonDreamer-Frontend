@@ -15,14 +15,14 @@ function EditProfile({
 
   const [formData, setFormData] = useState({
     username: "",
-    avatar: "",
+    profilePicture: "",
   });
 
   useEffect(() => {
     if (isOpen && currentUser) {
       setFormData({
         username: currentUser.username || "",
-        avatar: currentUser.avatar || "",
+        profilePicture: currentUser.profilePicture || "",
       });
     }
   }, [isOpen, currentUser]);
@@ -37,7 +37,7 @@ function EditProfile({
 
     const normalizedUsername = (formData.username || "").trim();
     const usernameChanged = normalizedUsername !== (currentUser?.username || "");
-    const avatarChanged = formData.avatar instanceof File;
+    const avatarChanged = formData.profilePicture instanceof File;
 
     if (!usernameChanged && !avatarChanged) {
       return;
@@ -52,9 +52,9 @@ function EditProfile({
     try {
       if (avatarChanged) {
         const form = new FormData();
-        form.append("avatar", formData.avatar);
+        form.append("profilePicture", formData.profilePicture);
 
-        const res = await fetch(`${API_URL}/api/upload-avatar`, {
+        const res = await fetch(`${API_URL}/api/upload-profile-picture`, {
           method: "POST",
           body: form,
           credentials: "include",
@@ -62,7 +62,7 @@ function EditProfile({
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Upload failed");
-        updates.avatar = data.avatar;
+        updates.profilePicture = data.profilePicture;
       }
 
       onEditProfileData(updates);
@@ -99,7 +99,7 @@ function EditProfile({
           accept="image/*"
           onChange={(e) => {
             const file = e.target.files[0];
-            if (file) setFormData((prev) => ({ ...prev, avatar: file }));
+            if (file) setFormData((prev) => ({ ...prev, profilePicture: file }));
           }}
         />
       </label>

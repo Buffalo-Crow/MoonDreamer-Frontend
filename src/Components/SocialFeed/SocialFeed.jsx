@@ -259,8 +259,8 @@ function SocialFeed() {
               <div className="social-feed__post-header">
                 <div className="social-feed__user">
                   <div className="social-feed__avatar">
-                    {dream.user.avatar ? (
-                      <img src={dream.user.avatar} alt={dream.user.username} />
+                    {dream.user.profilePicture ? (
+                      <img src={dream.user.profilePicture} alt={dream.user.username} />
                     ) : (
                       <div className="social-feed__avatar-placeholder">
                         {dream.user.username.charAt(0).toUpperCase()}
@@ -368,9 +368,9 @@ function SocialFeed() {
                     <div key={comment._id} className="social-feed__comment">
                       <div className="social-feed__comment-user">
                         <div className="social-feed__comment-avatar">
-                          {comment.user?.avatar ? (
+                          {comment.user?.profilePicture ? (
                             <img
-                              src={comment.user.avatar}
+                              src={comment.user.profilePicture}
                               alt={comment.user?.username || "Anonymous"}
                             />
                           ) : (

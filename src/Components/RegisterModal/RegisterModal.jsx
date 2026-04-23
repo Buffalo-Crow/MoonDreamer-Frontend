@@ -140,13 +140,13 @@ const handleSubmit = async (e) => {
   }
 
   try {
-    let avatarUrl = "";
+    let profilePictureUrl = "";
 
-    if (formData.avatar instanceof File) {
+    if (formData.profilePicture instanceof File) {
       const form = new FormData();
-      form.append("avatar", formData.avatar);
+      form.append("profilePicture", formData.profilePicture);
 
-      const res = await fetch(`${API_URL}/api/upload-avatar`, {
+      const res = await fetch(`${API_URL}/api/upload-profile-picture`, {
         method: "POST",
         body: form,
         credentials: "include",
@@ -155,7 +155,7 @@ const handleSubmit = async (e) => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Upload failed");
 
-      avatarUrl = data.avatar; // Cloudinary URL
+      profilePictureUrl = data.profilePicture; // Cloudinary URL
     } else {
       throw new Error("Profile Picture file is required");
     }
@@ -166,7 +166,7 @@ const handleSubmit = async (e) => {
       email: formData.email,
       password: formData.password,
       passwordRepeat: formData.passwordRepeat,
-      avatar: avatarUrl, // only URL stored
+      profilePicture: profilePictureUrl, // only URL stored
       betaAgreementAcceptance: {
         accepted: true,
         version: BETA_AGREEMENT_VERSION,
@@ -264,16 +264,16 @@ const handleSubmit = async (e) => {
           className="modal__input"
           type="file"
           accept="image/*"
-          id="avatar"
-          name="avatar"
+          id="profilePicture"
+          name="profilePicture"
           onChange={(e) => {
             const file = e.target.files[0];
             if (file) {
-              setFormData((prev) => ({ ...prev, avatar: file })); 
+              setFormData((prev) => ({ ...prev, profilePicture: file })); 
             }
           }}
         />
-        {avatarError && <span className="modal__error">{avatarError}</span>}
+        {profilePictureError && <span className="modal__error">{profilePictureError}</span>}
       </label>
 
       <div className="register-agreement">

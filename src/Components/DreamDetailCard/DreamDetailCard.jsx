@@ -49,7 +49,13 @@ function DreamDetailCard({
         <div className="dream-detail__container">
           <p className="dream-detail__summary">Summary: {dream.summary}</p>
           <p className="dream-detail__moon-sign">Moon-Sign: {dream.moonSign}</p>
-          <p className="dream-detail__categories">Categories: {dream.categories}</p>
+          <p className="dream-detail__categories">
+            Categories:{" "}
+            {(Array.isArray(dream.categories)
+              ? dream.categories
+              : (dream.categories || "").split(",")
+            ).map((cat) => cat.trim()).join(", ")}
+          </p>
           <p className="dream-detail__tags">Tags: {formatTags(dream.tags)}</p>
         <AIInsights dreamId={dream._id} token={currentUser?.token} />
         </div>

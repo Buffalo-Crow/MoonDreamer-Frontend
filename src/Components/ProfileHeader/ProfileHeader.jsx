@@ -2,7 +2,7 @@ import { useContext } from "react";
 import "./ProfileHeader.css";
 import { Link } from "react-router-dom";
 import BoldLogo from "../../assets/bold_logo.svg";
-import Avatar from "../../assets/avatar.svg";
+import ProfilePicture from "../../assets/avatar.svg";
 import { UserContext } from "../../contexts/userContext";
 
 function ProfileHeader({ handleEditProfileClick }) {
@@ -23,7 +23,7 @@ function ProfileHeader({ handleEditProfileClick }) {
         <img
           onClick={handleEditProfileClick}
           className="profile__avatar"
-          src={currentUser.avatar || Avatar}
+          src={currentUser.profilePicture || ProfilePicture}
           alt=""
         />
 

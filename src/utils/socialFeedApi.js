@@ -22,7 +22,7 @@ export async function fetchPublicDreams() {
   return dreams.map((dream) => ({
     ...dream,
     user: dream.userId ||
-      dream.user || { _id: "unknown", username: "Anonymous", avatar: "" },
+      dream.user || { _id: "unknown", username: "Anonymous", profilePicture: "" },
     likes: dream.likes || [],
     comments: dream.comments || [],
   }));

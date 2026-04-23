@@ -29,7 +29,7 @@ async function getToken() {
   return token;
 }
 
-async function editProfile({ username, avatar }) {
+async function editProfile({ username, profilePicture }) {
   const token = await getToken();
   return fetch(`${API_URL}/api/users/me`, {
     method: "PATCH",
@@ -39,7 +39,7 @@ async function editProfile({ username, avatar }) {
     },
     body: JSON.stringify({
       username,
-      avatar,
+      profilePicture,
     }),
   }).then((res) => checkResponse(res));
 }

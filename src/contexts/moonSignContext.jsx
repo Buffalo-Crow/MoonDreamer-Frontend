@@ -34,7 +34,7 @@ export function MoonProvider({ children }) {
         const res = await fetch(url);
         const data = await res.json();
 
-        if (!data?.moonSign) throw new Error("Moon sign missing from API");
+        if (!data?.moonSign || data.moonSign === "Unknown") throw new Error("Moon sign missing from API");
 
         const key = data.moonSign.toLowerCase();
         const moonData = {
@@ -60,8 +60,22 @@ export function MoonProvider({ children }) {
 
     fetchMoonSign();
 
+    // Re-fetch when the date changes (midnight rollover)
+    const now = new Date();
+    const midnight = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + 1,
+      0, 0, 5 // 5 seconds after midnight to be safe
+    );
+    const msUntilMidnight = midnight - now;
+    const midnightTimer = setTimeout(() => {
+      fetchMoonSign();
+    }, msUntilMidnight);
+
     return () => {
       isMounted = false;
+      clearTimeout(midnightTimer);
     };
   }, []);
 
