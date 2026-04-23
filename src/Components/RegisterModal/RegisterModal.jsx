@@ -157,11 +157,11 @@ const handleSubmit = async (e) => {
 
       avatarUrl = data.avatar; // Cloudinary URL
     } else {
-      throw new Error("Avatar file is required");
+      throw new Error("Profile Picture file is required");
     }
 
-    // Pass URL to onRegister
-    onRegister({
+    // Pass URL to onRegister and wait so backend errors are shown in this modal.
+    await onRegister({
       username: formData.username,
       email: formData.email,
       password: formData.password,
@@ -184,7 +184,7 @@ const handleSubmit = async (e) => {
     <ModalWithForm
       isOpen={isOpen}
       title="Register"
-      closeActiveModal={closeActiveModal}
+      closeActiveModal={closeActiveModal} 
       buttonText="Sign Up"
       activeModal={activeModal}
       onSubmit={handleSubmit}
@@ -203,7 +203,7 @@ const handleSubmit = async (e) => {
           value={formData.username}
           onChange={handleChange}
           required
-          minLength={3}
+          minLength={5}
           maxLength={20}
         />
         {usernameError && <span className="modal__error">{usernameError}</span>}
@@ -259,7 +259,7 @@ const handleSubmit = async (e) => {
       </label>
 
       <label className="modal__label">
-        Avatar
+        Profile Picture
         <input
           className="modal__input"
           type="file"

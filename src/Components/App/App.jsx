@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import { useModal } from "../../contexts/modalContext";
@@ -56,8 +56,10 @@ function App() {
   const [dreamBeingEdited, setDreamBeingEdited] = useState(null);
   const [authReady, setAuthReady] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
+  const tutorialShownForUserRef = useRef(null);
   const navigate = useNavigate();
   const tutorialStorageKey = getTutorialStorageKey(currentUser);
+  const tutorialUserId = currentUser?._id || currentUser?.firebaseUid || null;
 
   // Keep user in sync with Firebase auth
   useEffect(() => {
@@ -84,6 +86,7 @@ function App() {
     if (!authReady) return;
 
     if (!currentUser) {
+      tutorialShownForUserRef.current = null;
       setShowTutorial(false);
       return;
     }
@@ -91,16 +94,24 @@ function App() {
     if (hasSeenTutorialForUser(currentUser)) {
       // Normalize any legacy key to the stable key so future checks are consistent.
       localStorage.setItem(tutorialStorageKey, "true");
+      tutorialShownForUserRef.current = tutorialUserId;
       setShowTutorial(false);
       return;
     }
+
+    // Prevent duplicate scheduling caused by auth/user hydration updates.
+    if (tutorialShownForUserRef.current === tutorialUserId) {
+      return;
+    }
+
+    tutorialShownForUserRef.current = tutorialUserId;
 
     const timerId = window.setTimeout(() => {
       setShowTutorial(true);
     }, 150);
 
     return () => window.clearTimeout(timerId);
-  }, [authReady, currentUser, tutorialStorageKey]);
+  }, [authReady, currentUser, tutorialStorageKey, tutorialUserId]);
 
   // Sync dreams when user changes (only after auth is ready)
   useEffect(() => {
@@ -165,15 +176,17 @@ function App() {
 
   // Register Sign in and sign out handlers
   const handleRegister = ({ username, email, password, avatar, betaAgreementAcceptance }) => {
-    register({ username, email, password, avatar, betaAgreementAcceptance })
+    return register({ username, email, password, avatar, betaAgreementAcceptance })
       .then(() => getUserInfo())
       .then((user) => {
         setCurrentUser(user);
         closeModal(activeModal);
         navigate("/profile");
+        return user;
       })
       .catch((err) => {
         console.error("Registration flow error:", err);
+        throw err;
       });
   };
 

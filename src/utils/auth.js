@@ -23,25 +23,36 @@ export const register = async ({ username, email, password, avatar, betaAgreemen
   const userCredential = await firebaseSignUp(email, password);
   const token = await userCredential.user.getIdToken();
 
-  const response = await fetch(`${API_URL}/api/users`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      firebaseUid: userCredential.user.uid,
-      username,
-      email,
-      avatar,
-      betaAgreementAcceptance,
-    }),
-  });
+  try {
+    const response = await fetch(`${API_URL}/api/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        firebaseUid: userCredential.user.uid,
+        username,
+        email,
+        avatar,
+        betaAgreementAcceptance,
+      }),
+    });
 
-  const data = await checkResponse(response);
-  localStorage.setItem("jwtToken", token);
-  localStorage.setItem("currentUser", JSON.stringify(data));
-  return data;
+    const data = await checkResponse(response);
+    localStorage.setItem("jwtToken", token);
+    localStorage.setItem("currentUser", JSON.stringify(data));
+    return data;
+  } catch (err) {
+    // If profile creation fails, remove the freshly created Firebase auth user
+    // to avoid leaving a half-registered account that blocks retries.
+    try {
+      await userCredential.user.delete();
+    } catch (cleanupErr) {
+      console.error("Failed to rollback Firebase user after profile creation error", cleanupErr);
+    }
+    throw err;
+  }
 };
 
 export const googleSignIn = async () => {

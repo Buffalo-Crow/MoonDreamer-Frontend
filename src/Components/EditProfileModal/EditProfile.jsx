@@ -92,7 +92,7 @@ function EditProfile({
         />
       </label>{" "}
       <label className="modal__label">
-        Avatar
+        Profile Picture
         <input
           className="modal__input"
           type="file"

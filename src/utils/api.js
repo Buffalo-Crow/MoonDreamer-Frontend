@@ -8,7 +8,19 @@ function checkResponse(res) {
   if (res.ok) {
     return res.json();
   }
-  return Promise.reject(`Error: ${res.status}`);
+
+  return res
+    .json()
+    .then((data) => {
+      const message = data?.message || data?.error || `Error: ${res.status}`;
+      throw new Error(message);
+    })
+    .catch((err) => {
+      if (err instanceof Error) {
+        throw err;
+      }
+      throw new Error(`Error: ${res.status}`);
+    });
 }
 
 async function getToken() {
