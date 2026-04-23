@@ -71,13 +71,13 @@ function RegisterModal({ isOpen, closeActiveModal, activeModal, onRegister }) {
     email: "",
     password: "",
     passwordRepeat: "",
-    avatar: "",
+    profilePicture: "",
     acceptedBetaAgreement: false,
   });
 
   const [loading, setLoading] = useState(false);
   const [passwordError, setPasswordError] = useState("");
-  const [avatarError, setAvatarError] = useState("");
+  const [profilePictureError, setProfilePictureError] = useState("");
   const [backendError, setBackendError] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [agreementError, setAgreementError] = useState("");

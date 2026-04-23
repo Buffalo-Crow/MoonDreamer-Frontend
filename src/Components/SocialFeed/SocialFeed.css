@@ -184,20 +184,20 @@
   gap: 12px;
 }
 
-.social-feed__avatar {
+.social-feed__profile-picture {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
 }
 
-.social-feed__avatar img {
+.social-feed__profile-picture img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.social-feed__avatar-placeholder {
+.social-feed__profile-picture-placeholder {
   width: 100%;
   height: 100%;
   background-color: #6c63ff;
@@ -400,7 +400,7 @@
   flex-shrink: 0;
 }
 
-.social-feed__comment-avatar {
+.social-feed__comment-profile-picture {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -408,13 +408,13 @@
   flex-shrink: 0;
 }
 
-.social-feed__comment-avatar img {
+.social-feed__comment-profile-picture img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.social-feed__comment-avatar-placeholder {
+.social-feed__comment-profile-picture-placeholder {
   width: 100%;
   height: 100%;
   background-color: #6c63ff;
@@ -560,7 +560,7 @@
     width: 50px;
   }
   
-  .social-feed__comment-avatar {
+  .social-feed__comment-profile-picture {
     width: 28px;
     height: 28px;
   }

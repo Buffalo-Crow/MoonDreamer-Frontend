@@ -258,11 +258,11 @@ function SocialFeed() {
             <div key={dream._id} className="social-feed__post">
               <div className="social-feed__post-header">
                 <div className="social-feed__user">
-                  <div className="social-feed__avatar">
+                  <div className="social-feed__profile-picture">
                     {dream.user.profilePicture ? (
                       <img src={dream.user.profilePicture} alt={dream.user.username} />
                     ) : (
-                      <div className="social-feed__avatar-placeholder">
+                      <div className="social-feed__profile-picture-placeholder">
                         {dream.user.username.charAt(0).toUpperCase()}
                       </div>
                     )}
@@ -367,14 +367,14 @@ function SocialFeed() {
                     .map((comment) => (
                     <div key={comment._id} className="social-feed__comment">
                       <div className="social-feed__comment-user">
-                        <div className="social-feed__comment-avatar">
+                        <div className="social-feed__comment-profile-picture">
                           {comment.user?.profilePicture ? (
                             <img
                               src={comment.user.profilePicture}
                               alt={comment.user?.username || "Anonymous"}
                             />
                           ) : (
-                            <div className="social-feed__comment-avatar-placeholder">
+                            <div className="social-feed__comment-profile-picture-placeholder">
                               {(comment.user?.username || "A").charAt(0).toUpperCase()}
                             </div>
                           )}

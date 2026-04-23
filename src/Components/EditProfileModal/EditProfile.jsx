@@ -37,9 +37,9 @@ function EditProfile({
 
     const normalizedUsername = (formData.username || "").trim();
     const usernameChanged = normalizedUsername !== (currentUser?.username || "");
-    const avatarChanged = formData.profilePicture instanceof File;
+    const profilePictureChanged = formData.profilePicture instanceof File;
 
-    if (!usernameChanged && !avatarChanged) {
+    if (!usernameChanged && !profilePictureChanged) {
       return;
     }
 
@@ -50,7 +50,7 @@ function EditProfile({
     }
 
     try {
-      if (avatarChanged) {
+      if (profilePictureChanged) {
         const form = new FormData();
         form.append("profilePicture", formData.profilePicture);
 

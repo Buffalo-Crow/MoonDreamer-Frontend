@@ -175,8 +175,8 @@ function App() {
   };
 
   // Register Sign in and sign out handlers
-  const handleRegister = ({ username, email, password, avatar, betaAgreementAcceptance }) => {
-    return register({ username, email, password, avatar, betaAgreementAcceptance })
+  const handleRegister = ({ username, email, password, profilePicture, betaAgreementAcceptance }) => {
+    return register({ username, email, password, profilePicture, betaAgreementAcceptance })
       .then(() => getUserInfo())
       .then((user) => {
         setCurrentUser(user);
@@ -225,8 +225,8 @@ function App() {
   }
 
   // edit User Profile
-  const handleEditProfileData = ({ username, avatar }) => {
-    editProfile({ username, avatar })
+  const handleEditProfileData = ({ username, profilePicture }) => {
+    editProfile({ username, profilePicture })
       .then((res) => {
         console.log(res.data);
         setCurrentUser(res.data);
