@@ -91,8 +91,9 @@ function DreamModal({
 
     if (dreamToEdit) {
       console.log("Setting form data from dreamToEdit:", dreamToEdit);
+      const originalDate = formatDateForInput(dreamToEdit.dateInput || dreamToEdit.date || "");
       setFormData({
-        date: formatDateForInput(dreamToEdit.date || ""),
+        date: originalDate,
         summary: dreamToEdit.summary || "",
         categories: dreamToEdit.categories || "",
         tags: formatTagsForInput(dreamToEdit.tags),
@@ -273,7 +274,7 @@ function DreamModal({
 
       if (
         !isEditMode ||
-        dreamToEdit.date !== formData.date ||
+        formatDateForInput(dreamToEdit.dateInput || dreamToEdit.date || "") !== formData.date ||
         dreamToEdit.location !== formData.location
       ) {
         moonSign = await getMoonSignFromLocationAndDate(

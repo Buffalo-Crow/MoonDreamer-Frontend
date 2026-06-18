@@ -2,6 +2,7 @@ import {useContext} from "react";
 import { UserContext } from "../../contexts/userContext";
 import "./DreamDetailCard.css";
 import { moonSignImages } from "../../utils/constants";
+import { formatDreamDate } from "../../utils/dateHelper";
 import AIInsights from "../AiInsights/AiInsights";
 
 function formatTags(tags) {
@@ -35,7 +36,7 @@ function DreamDetailCard({
     
     <div className="dream-detail-card">
       <div className="dream-detail__column">
-        <p>{new Date(dream.date).toLocaleDateString()}</p>
+        <p>{formatDreamDate(dream.dateInput, dream.date)}</p>
         {moonImage && (
           <img
             className="dream-detail__image"

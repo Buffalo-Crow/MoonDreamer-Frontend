@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { DreamContext } from "../../contexts/dreamContext";
 import "./DreamPreviewList.css";
 import { moonSignImages } from "../../utils/constants";
+import { formatDreamDate } from "../../utils/dateHelper";
 import Moon from "../../assets/Moon.svg";
 
 function DreamPreviewList({ onSelectDream }) {
@@ -55,7 +56,7 @@ function DreamPreviewList({ onSelectDream }) {
                     {dream.summary}
                   </p>
                   <span className="dream-preview__date">
-                    {new Date(dream.date).toLocaleDateString()}
+                    {formatDreamDate(dream.dateInput, dream.date)}
                   </span>
                 </div>
               </div>

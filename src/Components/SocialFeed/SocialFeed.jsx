@@ -9,6 +9,7 @@ import {
   toggleCommentLike,
 } from "../../utils/socialFeedApi";
 import { zodiacSigns } from "../../utils/constants";
+import { formatDreamDate } from "../../utils/dateHelper";
 import DeleteCommentModal from "../DeleteCommentModal/DeleteCommentModal";
 
 function SocialFeed() {
@@ -127,7 +128,11 @@ function SocialFeed() {
     setCommentText(prev => ({ ...prev, [dreamId]: value }));
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateInput, dateString) => {
+    if (dateInput) {
+      return formatDreamDate(dateInput, dateString);
+    }
+
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       month: "short",
@@ -270,7 +275,7 @@ function SocialFeed() {
                   <div className="social-feed__user-info">
                     <h4>{dream.user.username}</h4>
                     <span className="social-feed__date">
-                      {formatDate(dream.date)}
+                      {formatDate(dream.dateInput, dream.date)}
                     </span>
                   </div>
                 </div>
